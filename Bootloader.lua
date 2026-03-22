@@ -2,7 +2,7 @@
 -- Modular system with HTTP loading capability
 
 local HUB_VERSION = "2.3.1-Modular"
-local BASE_URL = "URL_PLACEHOLDER_/" -- Replace with your actual script hosting URL
+local BASE_URL = "https://raw.githubusercontent.com/jdjdhdcbfgghh8845/Zyntaros_script/refs/heads/main/" -- GitHub hosting URL
 
 -- Global State Container
 getgenv().MyHubState = getgenv().MyHubState or {}
