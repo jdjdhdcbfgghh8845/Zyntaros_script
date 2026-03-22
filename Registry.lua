@@ -50,19 +50,7 @@
     - Wall check (ignores targets behind walls)
     - Team check (doesn't target teammates)
     
-    SILENT AIM Features (360° Shoot):
-    - Shoot enemies in any direction
-    - No need to aim at target
-    - Adjustable hit chance (0-100%)
-    - Auto Shoot - automatically fires at targets
-    - Adjustable fire rate (0.05-1.0 sec)
-    - Works with wall check and team check
-    
-    BULLET DODGE Features:
-    - Automatically dodge incoming bullets
-    - Matrix-style evasion
-    - Adjustable detection range (5-50 studs)
-    - Customizable dodge speed
+
     
     SPEED HACK Features:
     - Increase movement speed (1x-10x)
@@ -155,16 +143,14 @@ Registry.customFOVEnabled = false
 Registry.customFOV = 70 -- Default Roblox FOV is 70
 Registry.defaultFOV = 70
 
--- 360° Shoot variables
-Registry.silentAimEnabled = false
-Registry.silentAimHitChance = 100 -- Percentage (0-100)
-Registry.autoShootEnabled = false -- Auto fire when target in range
-Registry.autoShootDelay = 0.1 -- Delay between shots
+-- Rage Aimbot variables
+Registry.rageAimbotEnabled = false
+Registry.rageOrbitSpeed = 10 -- Speed of rotation
+Registry.rageOrbitRadius = 3 -- Distance from target
+Registry.rageOrbitHeight = 5 -- Height above target
+Registry.rageMaxDistance = 50 -- Max distance to teleport
 
--- Bullet Dodge variables
-Registry.bulletDodgeEnabled = false
-Registry.dodgeDistance = 10 -- Distance to detect bullets
-Registry.dodgeSpeed = 2 -- Speed multiplier for dodge
+
 
 -- Speed Hack variables
 Registry.speedHackEnabled = false
@@ -174,6 +160,9 @@ Registry.originalWalkSpeed = 16 -- Default Roblox walk speed
 -- Misc variables
 Registry.noclipEnabled = false
 Registry.infJumpEnabled = false
+
+-- Whitelist variables
+Registry.whitelist = {} -- Table of whitelisted player names
 
 -- Setting variables
 Registry.rainbowEnabled = false

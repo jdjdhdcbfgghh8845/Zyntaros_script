@@ -15,8 +15,12 @@ function Config.saveConfig()
         predictionEnabled = Registry.predictionEnabled,
         predictionMultiplier = Registry.predictionMultiplier,
         aimbotAutoShoot = Registry.aimbotAutoShoot,
-        silentAimEnabled = Registry.silentAimEnabled,
-        silentAimHitChance = Registry.silentAimHitChance,
+        rageAimbotEnabled = Registry.rageAimbotEnabled,
+        rageOrbitSpeed = Registry.rageOrbitSpeed,
+        rageOrbitRadius = Registry.rageOrbitRadius,
+        rageOrbitHeight = Registry.rageOrbitHeight,
+        rageMaxDistance = Registry.rageMaxDistance,
+
         
         -- Visuals
         espEnabled = Registry.espEnabled,
@@ -28,7 +32,7 @@ function Config.saveConfig()
         
         -- Misc
         speedMultiplier = Registry.speedMultiplier,
-        bulletDodgeEnabled = Registry.bulletDodgeEnabled,
+
         noclipEnabled = Registry.noclipEnabled,
         infJumpEnabled = Registry.infJumpEnabled,
         
@@ -66,8 +70,12 @@ function Config.loadConfig()
         if config.predictionEnabled ~= nil then Registry.predictionEnabled = config.predictionEnabled end
         if config.predictionMultiplier ~= nil then Registry.predictionMultiplier = config.predictionMultiplier end
         if config.aimbotAutoShoot ~= nil then Registry.aimbotAutoShoot = config.aimbotAutoShoot end
-        if config.silentAimEnabled ~= nil then Registry.silentAimEnabled = config.silentAimEnabled end
-        if config.silentAimHitChance ~= nil then Registry.silentAimHitChance = config.silentAimHitChance end
+        if config.rageAimbotEnabled ~= nil then Registry.rageAimbotEnabled = config.rageAimbotEnabled end
+        if config.rageOrbitSpeed ~= nil then Registry.rageOrbitSpeed = config.rageOrbitSpeed end
+        if config.rageOrbitRadius ~= nil then Registry.rageOrbitRadius = config.rageOrbitRadius end
+        if config.rageOrbitHeight ~= nil then Registry.rageOrbitHeight = config.rageOrbitHeight end
+        if config.rageMaxDistance ~= nil then Registry.rageMaxDistance = config.rageMaxDistance end
+
         
         if config.espEnabled ~= nil then Registry.espEnabled = config.espEnabled end
         if config.skeletonEnabled ~= nil then Registry.ESP_SETTINGS.SkeletonEnabled = config.skeletonEnabled end
@@ -77,7 +85,7 @@ function Config.loadConfig()
         if config.glowEnabled ~= nil then _G.glowEnabled = config.glowEnabled end
         
         if config.speedMultiplier ~= nil then Registry.speedMultiplier = config.speedMultiplier end
-        if config.bulletDodgeEnabled ~= nil then Registry.bulletDodgeEnabled = config.bulletDodgeEnabled end
+
         if config.noclipEnabled ~= nil then Registry.noclipEnabled = config.noclipEnabled end
         if config.infJumpEnabled ~= nil then Registry.infJumpEnabled = config.infJumpEnabled end
         if config.rainbowEnabled ~= nil then Registry.rainbowEnabled = config.rainbowEnabled end
@@ -93,8 +101,12 @@ function Config.loadConfig()
             predictionEnabled = "Aimbot Prediction",
             predictionMultiplier = "Prediction Strength",
             aimbotAutoShoot = "Auto Shoot (Aimbot)",
-            silentAimEnabled = "Silent Aim",
-            silentAimHitChance = "Silent Hit Chance (%)",
+            rageAimbotEnabled = "Rage Aimbot",
+            rageOrbitSpeed = "Orbit Speed",
+            rageOrbitRadius = "Orbit Radius",
+            rageOrbitHeight = "Orbit Height",
+            rageMaxDistance = "Max Teleport Distance",
+
             
             espEnabled = "ESP",
             skeletonEnabled = "Skeleton ESP",
@@ -104,7 +116,7 @@ function Config.loadConfig()
             glowEnabled = "Enemy Glow",
             
             speedMultiplier = "Speed Multiplier",
-            bulletDodgeEnabled = "Defense",
+
             noclipEnabled = "Noclip",
             infJumpEnabled = "Infinite Jump",
             rainbowEnabled = "Rainbow Mode"

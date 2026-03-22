@@ -19,6 +19,19 @@ function Utils.isTeammate(player)
 end
 
 --[[
+    Check if player is whitelisted
+--]]
+function Utils.isWhitelisted(player)
+    if not player then return false end
+    for _, name in ipairs(Registry.whitelist) do
+        if player.Name:lower() == name:lower() or player.DisplayName:lower() == name:lower() then
+            return true
+        end
+    end
+    return false
+end
+
+--[[
     Get health color based on HP percentage
 --]]
 function Utils.getHealthColor(health, maxHealth)

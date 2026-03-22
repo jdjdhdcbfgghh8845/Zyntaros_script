@@ -38,8 +38,8 @@ function Combat.getClosestPlayerInFOV()
     
     for _, player in pairs(Registry.Players:GetPlayers()) do
         if player ~= Registry.LocalPlayer and player.Character then
-            -- Skip teammates
-            if not Utils.isTeammate(player) then
+            -- Skip teammates and whitelisted players
+            if not Utils.isTeammate(player) and not Utils.isWhitelisted(player) then
                 local character = player.Character
                 local humanoid = character:FindFirstChild("Humanoid")
                 
@@ -208,45 +208,33 @@ function Combat.aimAtTarget(targetPlayer)
     end
 end
 
---[[
-    360° SILENT AIM
-    Shoots at enemies in any direction without turning camera
---]]
 
-function Combat.getSilentAimTarget()
-    if not Registry.silentAimEnabled then return nil end
-    
+-- Gets the absolute closest player in 3D space for Rage Aimbot
+function Combat.getClosestRageTarget()
     local closestPlayer = nil
-    local shortestDistance = math.huge
+    local shortestDistance = Registry.rageMaxDistance
+    
+    local localCharacter = Registry.LocalPlayer.Character
+    if not localCharacter or not localCharacter:FindFirstChild("HumanoidRootPart") then return nil end
+    local localPos = localCharacter.HumanoidRootPart.Position
     
     for _, player in pairs(Registry.Players:GetPlayers()) do
-        if player ~= Registry.LocalPlayer and player.Character and not Utils.isTeammate(player) then
-            local character = player.Character
-            local humanoid = character:FindFirstChild("Humanoid")
-            
-            -- Skip dead players (corpses)
-            if humanoid and humanoid.Health > 0 then
-                local targetPart = character:FindFirstChild(Registry.aimbotTargetPart)
+        if player ~= Registry.LocalPlayer and player.Character then
+            -- Skip teammates and whitelisted players
+            if not Utils.isTeammate(player) and not Utils.isWhitelisted(player) then
+                local character = player.Character
+                local humanoid = character:FindFirstChild("Humanoid")
                 
-                if targetPart then
-                    -- Wall check
-                    if Registry.wallCheckEnabled then
-                        if not Utils.isTargetVisible(targetPart) then
-                            continue
-                        end
-                    end
+                -- Skip dead players
+                if humanoid and humanoid.Health > 0 then
+                    local targetPart = character:FindFirstChild(Registry.aimbotTargetPart)
                     
-                    -- Calculate distance
-                    if Registry.LocalPlayer.Character and Registry.LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
-                        local distance = (Registry.LocalPlayer.Character.HumanoidRootPart.Position - targetPart.Position).Magnitude
+                    if targetPart then
+                        local distance = (localPos - targetPart.Position).Magnitude
                         
-                        -- Hit chance calculation
-                        local hitRoll = math.random(1, 100)
-                        if hitRoll <= Registry.silentAimHitChance then
-                            if distance < shortestDistance then
-                                closestPlayer = player
-                                shortestDistance = distance
-                            end
+                        if distance < shortestDistance then
+                            closestPlayer = player
+                            shortestDistance = distance
                         end
                     end
                 end
@@ -258,34 +246,44 @@ function Combat.getSilentAimTarget()
 end
 
 --[[
-    AUTO SHOOT SYSTEM
-    Automatically shoots when target is found
+    RAGE AIMBOT (ORBIT TELEPORT)
+    Teleports above target and orbits them rapidly
 --]]
 
-local lastShootTime = 0
-
-function Combat.autoShoot()
-    if not Registry.autoShootEnabled then return end
-    if tick() - lastShootTime < Registry.autoShootDelay then return end
+function Combat.performRageBot()
+    if not Registry.rageAimbotEnabled then return end
+    if not Registry.LocalPlayer.Character or not Registry.LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then return end
     
-    local target = Combat.getSilentAimTarget()
-    if target then
-        -- Simulate mouse click to shoot
-        local shootSuccess = pcall(function()
-            mouse1click()
-        end)
+    local targetPlayer = Combat.getClosestRageTarget()
+    if targetPlayer and targetPlayer.Character then
+        local targetRoot = targetPlayer.Character:FindFirstChild("HumanoidRootPart")
+        local targetHead = targetPlayer.Character:FindFirstChild("Head")
         
-        if not shootSuccess then
-            -- Fallback method
+        if targetRoot and targetHead then
+            -- Calculate orbit position
+            local time = tick()
+            local speed = Registry.rageOrbitSpeed
+            local radius = Registry.rageOrbitRadius
+            local height = Registry.rageOrbitHeight
+            
+            local offsetX = math.cos(time * speed) * radius
+            local offsetZ = math.sin(time * speed) * radius
+            
+            local orbitPos = targetRoot.Position + Vector3.new(offsetX, height, offsetZ)
+            
+            -- Teleport and Look at target
+            local rootPart = Registry.LocalPlayer.Character.HumanoidRootPart
             pcall(function()
-                mouse1press()
-                wait(0.05)
-                mouse1release()
+                -- Keep current velocity to 0 so we don't fling
+                rootPart.AssemblyLinearVelocity = Vector3.new(0, 0, 0)
+                rootPart.CFrame = CFrame.new(orbitPos, targetHead.Position)
             end)
+            
+            -- Auto-Shoot while orbiting
+            if Registry.aimbotAutoShoot then
+                pcall(function() mouse1click() end)
+            end
         end
-        
-        lastShootTime = tick()
-        print("[AUTO SHOOT] 🔫 Fired at " .. target.Name)
     end
 end
 
@@ -305,8 +303,8 @@ function Combat.isHoveringPlayer()
     -- Check if target belongs to a player's character
     for _, player in pairs(Registry.Players:GetPlayers()) do
         if player ~= Registry.LocalPlayer and player.Character then
-            -- Skip teammates
-            if not Utils.isTeammate(player) then
+            -- Skip teammates and whitelisted players
+            if not Utils.isTeammate(player) and not Utils.isWhitelisted(player) then
                 local humanoid = player.Character:FindFirstChild("Humanoid")
                 
                 -- Skip dead players (corpses)

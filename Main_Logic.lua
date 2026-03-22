@@ -24,34 +24,7 @@ function Main_Logic.installBypasses()
         print("[BYPASS] ✅ Camera metatable hook installed")
     end
 
-    -- Hook into mouse clicks for silent aim (if executor supports it)
-    if hookmetamethod and getnamecallmethod then
-        local hookSuccess = pcall(function()
-            local oldNamecall
-            oldNamecall = hookmetamethod(game, "__namecall", function(self, ...)
-                local method = getnamecallmethod()
-                local args = {...}
-                
-                if Registry.silentAimEnabled and method == "FireServer" and (self.Name == "ShootEvent" or self.Name == "Fire" or self.Name == "RemoteEvent") then
-                    local target = Combat.getSilentAimTarget()
-                    if target and target.Character then
-                        local targetPart = target.Character:FindFirstChild(Registry.aimbotTargetPart)
-                        if targetPart then
-                            -- Modify shot direction to target
-                            args[1] = targetPart.Position
-                            return oldNamecall(self, unpack(args))
-                        end
-                    end
-                end
-                
-                return oldNamecall(self, ...)
-            end)
-        end)
-        
-        if hookSuccess then
-            print("[SILENT AIM] ✅ Hook installed successfully")
-        end
-    end
+
 end
 
 --[[
@@ -199,6 +172,11 @@ function Main_Logic.startLoops()
             end
         end
         
+        -- Rage Aimbot (ORBIT)
+        if Registry.rageAimbotEnabled then
+            Combat.performRageBot()
+        end
+        
         -- Update FOV circle (always visible)
         if getgenv().MyHubState.fovCircle then
             getgenv().MyHubState.fovCircle.Position = Vector2.new(Registry.Camera.ViewportSize.X / 2, Registry.Camera.ViewportSize.Y / 2)
@@ -233,15 +211,7 @@ function Main_Logic.startLoops()
         Effects.updateCrosshair()
         Visuals.updateSkeleton()
 
-        -- Auto Shoot System (360° shooting)
-        if Registry.silentAimEnabled or Registry.autoShootEnabled then
-            Combat.autoShoot()
-        end
-        
-        -- Bullet Dodge System
-        if Registry.bulletDodgeEnabled then
-            Misc.performDodge()
-        end
+
         
         -- World Visuals
         if Registry.worldVisualsEnabled then

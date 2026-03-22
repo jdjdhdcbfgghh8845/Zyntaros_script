@@ -285,6 +285,112 @@ function UI_Components.createSlider(parent, name, min, max, default, callback)
     return sliderFrame
 end
 
+-- Helper function to create a beautiful text input (monochrome)
+function UI_Components.createTextBox(parent, name, placeholder, callback)
+    local boxFrame = Instance.new("Frame")
+    boxFrame.Size = UDim2.new(1, -10, 0, 40)
+    boxFrame.BackgroundColor3 = Color3.fromRGB(22, 22, 22)
+    boxFrame.BorderSizePixel = 0
+    boxFrame.Parent = parent
+    
+    local frameCorner = Instance.new("UICorner")
+    frameCorner.CornerRadius = UDim.new(0, 4)
+    frameCorner.Parent = boxFrame
+    
+    local frameStroke = Instance.new("UIStroke")
+    frameStroke.Color = Color3.fromRGB(55, 55, 55)
+    frameStroke.Thickness = 1.5
+    frameStroke.Transparency = 0.4
+    frameStroke.Parent = boxFrame
+    
+    local label = Instance.new("TextLabel")
+    label.Size = UDim2.new(0.4, 0, 1, 0)
+    label.Position = UDim2.new(0, 15, 0, 0)
+    label.BackgroundTransparency = 1
+    label.Text = name
+    label.TextColor3 = Color3.fromRGB(230, 230, 230)
+    label.Font = Enum.Font.GothamBold
+    label.TextSize = 13
+    label.TextXAlignment = Enum.TextXAlignment.Left
+    label.Parent = boxFrame
+    
+    local textBoxFrame = Instance.new("Frame")
+    textBoxFrame.Size = UDim2.new(0.5, 0, 0, 26)
+    textBoxFrame.Position = UDim2.new(0.45, 0, 0.5, -13)
+    textBoxFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+    textBoxFrame.Parent = boxFrame
+    
+    local boxCorner = Instance.new("UICorner")
+    boxCorner.CornerRadius = UDim.new(0, 4)
+    boxCorner.Parent = textBoxFrame
+    
+    local textBox = Instance.new("TextBox")
+    textBox.Size = UDim2.new(1, -10, 1, 0)
+    textBox.Position = UDim2.new(0, 5, 0, 0)
+    textBox.BackgroundTransparency = 1
+    textBox.Text = ""
+    textBox.PlaceholderText = placeholder
+    textBox.TextColor3 = Color3.fromRGB(240, 240, 240)
+    textBox.PlaceholderColor3 = Color3.fromRGB(120, 120, 120)
+    textBox.Font = Enum.Font.Gotham
+    textBox.TextSize = 12
+    textBox.ClearTextOnFocus = false
+    textBox.TextXAlignment = Enum.TextXAlignment.Left
+    textBox.Parent = textBoxFrame
+    
+    textBox.FocusLost:Connect(function(enterPressed)
+        if enterPressed or textBox.Text ~= "" then
+            callback(textBox.Text)
+        end
+    end)
+    
+    return boxFrame, textBox
+end
+
+-- Helper function to create simple button (monochrome)
+function UI_Components.createButton(parent, text, callback)
+    local buttonFrame = Instance.new("Frame")
+    buttonFrame.Size = UDim2.new(1, -10, 0, 35)
+    buttonFrame.BackgroundColor3 = Color3.fromRGB(22, 22, 22)
+    buttonFrame.BorderSizePixel = 0
+    buttonFrame.Parent = parent
+    
+    local frameCorner = Instance.new("UICorner")
+    frameCorner.CornerRadius = UDim.new(0, 4)
+    frameCorner.Parent = buttonFrame
+    
+    local frameStroke = Instance.new("UIStroke")
+    frameStroke.Color = Color3.fromRGB(80, 80, 80)
+    frameStroke.Thickness = 1.5
+    frameStroke.Transparency = 0.4
+    frameStroke.Parent = buttonFrame
+    
+    local button = Instance.new("TextButton")
+    button.Size = UDim2.new(1, 0, 1, 0)
+    button.BackgroundTransparency = 1
+    button.Text = text
+    button.TextColor3 = Color3.fromRGB(230, 230, 230)
+    button.Font = Enum.Font.GothamBold
+    button.TextSize = 13
+    button.Parent = buttonFrame
+    
+    button.MouseButton1Click:Connect(function()
+        callback()
+        Registry.TweenService:Create(buttonFrame, TweenInfo.new(0.1), {Size = UDim2.new(1, -15, 0, 33)}):Play()
+        task.wait(0.1)
+        Registry.TweenService:Create(buttonFrame, TweenInfo.new(0.1), {Size = UDim2.new(1, -10, 0, 35)}):Play()
+    end)
+    
+    button.MouseEnter:Connect(function()
+        Registry.TweenService:Create(buttonFrame, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(35, 35, 35)}):Play()
+    end)
+    button.MouseLeave:Connect(function()
+        Registry.TweenService:Create(buttonFrame, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(22, 22, 22)}):Play()
+    end)
+    
+    return buttonFrame
+end
+
 -- [[ FEATURE TILE COMPONENT ]]
 function UI_Components.createFeatureTile(parent, name, defaultState, callback)
     local tile = Instance.new("Frame")

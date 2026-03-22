@@ -14,12 +14,14 @@ function UI_Pages.build()
     local AimbotPage = UI_Main.createPage("Aimbot")
     local VisualsPage = UI_Main.createPage("Visuals")
     local MiscPage = UI_Main.createPage("Misc")
+    local ExceptionsPage = UI_Main.createPage("Exceptions")
     local SettingsPage = UI_Main.createPage("Settings")
 
     -- Create Tab Buttons
     UI_Main.createTabButton("AIMBOT", "🎯", "Aimbot")
     UI_Main.createTabButton("VISUALS", "👁️", "Visuals")
     UI_Main.createTabButton("MISC", "⚙️", "Misc")
+    UI_Main.createTabButton("EXCEPTIONS", "🛡️", "Exceptions")
     UI_Main.createTabButton("SETTINGS", "🛠️", "Settings")
 
     -- Default Tab
@@ -42,17 +44,18 @@ function UI_Pages.build()
     UI_Components.createToggle(aimbotSettings, "Aimbot Prediction", false, function(state) Registry.predictionEnabled = state end)
     UI_Components.createSlider(aimbotSettings, "Prediction Strength", 0.05, 0.5, 0.15, function(val) Registry.predictionMultiplier = val end)
     UI_Components.createToggle(aimbotSettings, "Auto Shoot (Aimbot)", false, function(state) Registry.aimbotAutoShoot = state end)
-
-    local silentAimSettings, silentIcon = UI_Components.createFeatureTile(AimbotPage, "Silent Aim", false, function(state)
-        Registry.silentAimEnabled = state
-        if state then print("[SILENT AIM] 🔫 360° Enabled") end
-    end)
-    silentIcon.Text = "🔫"
     
-    UI_Components.createSection(silentAimSettings, "Silent Targeting")
-    UI_Components.createSlider(silentAimSettings, "Silent Hit Chance (%)", 0, 100, 100, function(val) Registry.silentAimHitChance = val end)
-    UI_Components.createToggle(silentAimSettings, "Auto Shoot", false, function(state) Registry.autoShootEnabled = state end)
-    UI_Components.createSlider(silentAimSettings, "Auto Fire Rate", 0.05, 1.0, 0.1, function(val) Registry.autoShootDelay = val end)
+    local rageSettings, rageIcon = UI_Components.createFeatureTile(AimbotPage, "Rage Aimbot", false, function(state)
+        Registry.rageAimbotEnabled = state
+        if state then print("[RAGE AIMBOT] 🌪️ Enabled") end
+    end)
+    rageIcon.Text = "🌪️"
+    
+    UI_Components.createSection(rageSettings, "Orbit Configuration")
+    UI_Components.createSlider(rageSettings, "Orbit Speed", 1, 50, 10, function(val) Registry.rageOrbitSpeed = val end)
+    UI_Components.createSlider(rageSettings, "Orbit Radius", 1, 20, 3, function(val) Registry.rageOrbitRadius = val end)
+    UI_Components.createSlider(rageSettings, "Orbit Height", 0, 20, 5, function(val) Registry.rageOrbitHeight = val end)
+    UI_Components.createSlider(rageSettings, "Max Teleport Distance", 10, 1000, 50, function(val) Registry.rageMaxDistance = val end)
 
     local triggerSettings, triggerIcon = UI_Components.createFeatureTile(AimbotPage, "Trigger Bot", false, function(state)
         Registry.triggerBotEnabled = state
@@ -123,13 +126,7 @@ function UI_Pages.build()
     end)
     noclipIcon.Text = "👻"
 
-    local defenseSettings, defenseIcon = UI_Components.createFeatureTile(MiscPage, "Defense", false, function(state)
-        Registry.bulletDodgeEnabled = state
-    end)
-    defenseIcon.Text = "🛡️"
-    UI_Components.createSection(defenseSettings, "Evasion")
-    UI_Components.createSlider(defenseSettings, "Dodge Distance", 5, 50, 10, function(val) Registry.dodgeDistance = val end)
-    UI_Components.createSlider(defenseSettings, "Dodge Intensity", 1, 5, 2, function(val) Registry.dodgeSpeed = val end)
+
 
     local camSettings, camIcon = UI_Components.createFeatureTile(MiscPage, "Camera/FOV", false, function(state)
         Registry.customFOVEnabled = state
@@ -139,6 +136,41 @@ function UI_Pages.build()
     UI_Components.createSlider(camSettings, "Custom Field of View", 30, 120, 70, function(val) 
         Registry.customFOV = val
         getgenv().MyHubState.Main_Logic.applyCameraFOV()
+    end)
+
+    -- [[ EXCEPTIONS PAGE TILES ]]
+    local whitelistSettings, whitelistIcon = UI_Components.createFeatureTile(ExceptionsPage, "Whitelist", true, function(state) end)
+    whitelistIcon.Text = "🛡️"
+    
+    UI_Components.createSection(whitelistSettings, "Add Player")
+    local currentPlayerName = ""
+    UI_Components.createTextBox(whitelistSettings, "Player Name", "Enter name...", function(text)
+        currentPlayerName = text
+    end)
+    UI_Components.createButton(whitelistSettings, "Add to Whitelist", function()
+        if currentPlayerName ~= "" then
+            table.insert(Registry.whitelist, currentPlayerName)
+            print("[WHITELIST] Added: " .. currentPlayerName)
+            currentPlayerName = "" -- reset
+        end
+    end)
+    
+    UI_Components.createSection(whitelistSettings, "Remove Player")
+    local removePlayerName = ""
+    UI_Components.createTextBox(whitelistSettings, "Player Name", "Enter name...", function(text)
+        removePlayerName = text
+    end)
+    UI_Components.createButton(whitelistSettings, "Remove", function()
+        if removePlayerName ~= "" then
+            for i, name in ipairs(Registry.whitelist) do
+                if name:lower() == removePlayerName:lower() then
+                    table.remove(Registry.whitelist, i)
+                    print("[WHITELIST] Removed: " .. removePlayerName)
+                    break
+                end
+            end
+            removePlayerName = ""
+        end
     end)
 
     -- [[ SETTINGS PAGE TILES ]]
