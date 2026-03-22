@@ -77,14 +77,20 @@ function Misc.applyShrink()
             if part:IsA("BasePart") and part.Name ~= "HumanoidRootPart" then
                 pcall(function()
                     -- REPLICATION HACK: Stacking parts at the Root makes the hitbox shrink on the server
-                    -- since part CFrames replicate from the client for our own character.
                     part.CFrame = char.HumanoidRootPart.CFrame
                     
                     -- Force shrink Size
                     part.Size = Vector3.new(Registry.shrinkScale, Registry.shrinkScale, Registry.shrinkScale)
                     
-                    -- Elimination of collisions between parts to prevent flinging
+                    -- Physics stability to prevent flinging
                     part.CanCollide = false 
+                    part.CanTouch = false
+                    part.CanQuery = false
+                    part.Massless = true
+                    
+                    -- Zero out velocities for this part
+                    part.AssemblyLinearVelocity = Vector3.new(0,0,0)
+                    part.AssemblyAngularVelocity = Vector3.new(0,0,0)
                 end)
             end
         end
