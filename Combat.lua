@@ -277,11 +277,30 @@ function Combat.performRageBot()
                 -- Keep current velocity to 0 so we don't fling
                 rootPart.AssemblyLinearVelocity = Vector3.new(0, 0, 0)
                 rootPart.CFrame = CFrame.new(orbitPos, targetHead.Position)
+                
+                -- Force camera perfectly onto target's head (crucial for some weapons)
+                Registry.Camera.CFrame = CFrame.new(Registry.Camera.CFrame.Position, targetHead.Position)
             end)
             
-            -- Auto-Shoot while orbiting
-            if Registry.aimbotAutoShoot then
-                pcall(function() mouse1click() end)
+            -- IMMEDIATELY AUTO-SHOOT (No toggle required for Rage)
+            -- Throttled to 20 shots/sec to prevent crashing executor or game
+            if not Registry.lastRageShot then Registry.lastRageShot = 0 end
+            local currentTime = tick()
+            
+            if currentTime - Registry.lastRageShot >= 0.05 then
+                Registry.lastRageShot = currentTime
+                
+                -- Primary shot
+                local success = pcall(function() mouse1click() end)
+                
+                -- Fallback for weird weapons or executors
+                if not success then
+                    pcall(function() 
+                        mouse1press()
+                        task.wait(0.01)
+                        mouse1release()
+                    end)
+                end
             end
         end
     end

@@ -50,4 +50,32 @@ function Misc.applyInfiniteJump()
     end
 end
 
+--[[
+    HITBOX SHRINKER
+--]]
+function Misc.applyShrink()
+    if not Registry.LocalPlayer.Character then return end
+    local humanoid = Registry.LocalPlayer.Character:FindFirstChild("Humanoid")
+    if not humanoid then return end
+    
+    local scales = {"BodyDepthScale", "BodyHeightScale", "BodyWidthScale", "HeadScale", "BodyProportionScale"}
+    
+    if Registry.shrinkEnabled then
+        for _, scaleName in ipairs(scales) do
+            local scaleValue = humanoid:FindFirstChild(scaleName)
+            if scaleValue and scaleValue:IsA("NumberValue") then
+                scaleValue.Value = Registry.shrinkScale
+            end
+        end
+    else
+        -- Restore to default
+        for _, scaleName in ipairs(scales) do
+            local scaleValue = humanoid:FindFirstChild(scaleName)
+            if scaleValue and scaleValue:IsA("NumberValue") then
+                scaleValue.Value = 1
+            end
+        end
+    end
+end
+
 return Misc

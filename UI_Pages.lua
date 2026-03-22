@@ -126,6 +126,14 @@ function UI_Pages.build()
     end)
     noclipIcon.Text = "👻"
 
+    local shrinkSettings, shrinkIcon = UI_Components.createFeatureTile(MiscPage, "Hitbox Shrinker", false, function(state)
+        Registry.shrinkEnabled = state
+        Misc.applyShrink()
+    end)
+    shrinkIcon.Text = "📦"
+    UI_Components.createSection(shrinkSettings, "Compression")
+    UI_Components.createSlider(shrinkSettings, "Shrink Size", 0.1, 1.0, 0.2, function(val) Registry.shrinkScale = val end)
+
 
 
     local camSettings, camIcon = UI_Components.createFeatureTile(MiscPage, "Camera/FOV", false, function(state)

@@ -78,6 +78,9 @@ function Main_Logic.onCharacterAdded(player, character)
         if Registry.speedHackEnabled then
             Misc.applySpeedHack()
         end
+        if Registry.shrinkEnabled then
+            Misc.applyShrink()
+        end
         return 
     end
     
@@ -226,6 +229,9 @@ function Main_Logic.startLoops()
         if Registry.speedHackEnabled then
             Misc.applySpeedHack()
         end
+
+        -- Continuous Shrink check
+        Misc.applyShrink()
 
         -- Noclip
         Misc.applyNoclip()

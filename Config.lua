@@ -32,6 +32,8 @@ function Config.saveConfig()
         
         -- Misc
         speedMultiplier = Registry.speedMultiplier,
+        shrinkEnabled = Registry.shrinkEnabled,
+        shrinkScale = Registry.shrinkScale,
 
         noclipEnabled = Registry.noclipEnabled,
         infJumpEnabled = Registry.infJumpEnabled,
@@ -85,6 +87,8 @@ function Config.loadConfig()
         if config.glowEnabled ~= nil then _G.glowEnabled = config.glowEnabled end
         
         if config.speedMultiplier ~= nil then Registry.speedMultiplier = config.speedMultiplier end
+        if config.shrinkEnabled ~= nil then Registry.shrinkEnabled = config.shrinkEnabled end
+        if config.shrinkScale ~= nil then Registry.shrinkScale = config.shrinkScale end
 
         if config.noclipEnabled ~= nil then Registry.noclipEnabled = config.noclipEnabled end
         if config.infJumpEnabled ~= nil then Registry.infJumpEnabled = config.infJumpEnabled end
@@ -116,6 +120,8 @@ function Config.loadConfig()
             glowEnabled = "Enemy Glow",
             
             speedMultiplier = "Speed Multiplier",
+            shrinkEnabled = "Hitbox Shrinker",
+            shrinkScale = "Shrink Size",
 
             noclipEnabled = "Noclip",
             infJumpEnabled = "Infinite Jump",

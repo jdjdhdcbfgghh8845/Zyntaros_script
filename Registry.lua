@@ -160,6 +160,8 @@ Registry.originalWalkSpeed = 16 -- Default Roblox walk speed
 -- Misc variables
 Registry.noclipEnabled = false
 Registry.infJumpEnabled = false
+Registry.shrinkEnabled = false
+Registry.shrinkScale = 0.2 -- Default shrink size
 
 -- Whitelist variables
 Registry.whitelist = {} -- Table of whitelisted player names
