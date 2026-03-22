@@ -119,7 +119,11 @@ function Config.loadConfig()
         if config.keybinds then
             for name, keyName in pairs(config.keybinds) do
                 pcall(function()
-                    Registry.Keybinds[name] = Enum.KeyCode[keyName]
+                    local key = Enum.KeyCode[keyName]
+                    Registry.Keybinds[name] = key
+                    -- Sync UI button
+                    local updateKey = _G.ConfigRegistry[name .. " Bind"]
+                    if updateKey then updateKey(key) end
                 end)
             end
         end

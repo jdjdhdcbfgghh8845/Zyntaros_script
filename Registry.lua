@@ -147,6 +147,7 @@ Registry.Keybinds = {
     ["Fly Hack"] = Enum.KeyCode.F, -- Default F for Fly
     ["Noclip"] = Enum.KeyCode.V, -- Default V for Noclip
     ["Speed Hack"] = Enum.KeyCode.B, -- Default B for Speed
+    ["Infinite Jump"] = Enum.KeyCode.Space, -- Space for toggle or just use jump?
 }
 
 -- Camera FOV variables

@@ -142,10 +142,11 @@ function Main_Logic.connectEvents()
 
     -- Universal Keybind Listener
     Registry.UserInputService.InputBegan:Connect(function(input, processed)
-        if processed then return end
+        -- Only ignore if typing in a text box
+        if Registry.UserInputService:GetFocusedTextBox() then return end
         
         for featureName, bindKey in pairs(Registry.Keybinds) do
-            if input.KeyCode == bindKey then
+            if input.KeyCode == bindKey and bindKey ~= Enum.KeyCode.Unknown then
                 if featureName == "Aimbot" then
                     Registry.aimbotEnabled = not Registry.aimbotEnabled
                     local update = _G.ConfigRegistry["Aimbot"]
@@ -185,11 +186,17 @@ function Main_Logic.connectEvents()
                     local update = _G.ConfigRegistry["Speed Hack"]
                     if update then update(Registry.speedHackEnabled) end
                     print("[SPEED] Toggled: " .. tostring(Registry.speedHackEnabled))
+                
+                elseif featureName == "Infinite Jump" then
+                    Registry.infJumpEnabled = not Registry.infJumpEnabled
+                    local update = _G.ConfigRegistry["Infinite Jump"]
+                    if update then update(Registry.infJumpEnabled) end
+                    print("[INF JUMP] Toggled: " .. tostring(Registry.infJumpEnabled))
                 end
                 
                 -- Auto-Save on keybind toggle
                 if Registry.autoSaveEnabled then
-                    Config.saveConfig()
+                    getgenv().MyHubState.Config.saveConfig()
                 end
             end
         end
