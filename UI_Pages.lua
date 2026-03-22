@@ -185,7 +185,7 @@ function UI_Pages.build()
     local configSettings, configIcon = UI_Components.createFeatureTile(SettingsPage, "Configuration", false, function(state) end)
     configIcon.Text = "💾"
     UI_Components.createSection(configSettings, "Profiles")
-    UI_Components.createToggle(configSettings, "Auto-Save on Exit", false, function(state) end)
+    UI_Components.createToggle(configSettings, "Auto-Save on Exit", true, function(state) Registry.autoSaveEnabled = state end)
     
     local saveBtn = UI_Components.createToggle(configSettings, "Click to SAVE Config", false, function(s) Config.saveConfig() end)
     local loadBtn = UI_Components.createToggle(configSettings, "Click to LOAD Config", false, function(s) Config.loadConfig() end)
@@ -197,6 +197,7 @@ function UI_Pages.build()
     
     UI_Components.createSection(infoSettings, "Keybinds")
     UI_Components.createToggle(infoSettings, "Menu Key: [INSERT]", true, function(s) end)
+    UI_Components.createToggle(infoSettings, "Rage Bot Key: [X]", true, function(s) end)
     UI_Components.createToggle(infoSettings, "Aimbot Key: [Z]", true, function(s) end)
     UI_Components.createToggle(infoSettings, "Trigger Key: [H]", true, function(s) end)
 end

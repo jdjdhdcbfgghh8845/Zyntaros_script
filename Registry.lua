@@ -149,6 +149,7 @@ Registry.rageOrbitSpeed = 10 -- Speed of rotation
 Registry.rageOrbitRadius = 3 -- Distance from target
 Registry.rageOrbitHeight = 5 -- Height above target
 Registry.rageMaxDistance = 50 -- Max distance to teleport
+Registry.rageKeybind = Enum.KeyCode.X -- Default keybind for Rage toggle
 
 
 
@@ -170,6 +171,9 @@ Registry.whitelist = {} -- Table of whitelisted player names
 Registry.rainbowEnabled = false
 Registry.currentTheme = "Cyberpunk"
 Registry.worldVisualsEnabled = true
+Registry.autoSaveEnabled = true -- Default ON
+Registry.lastAutoSave = tick()
+Registry.autoSaveInterval = 60 -- Save every 1 minute if enabled
 
 -- Settings
 Registry.ESP_SETTINGS = {

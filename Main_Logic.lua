@@ -129,6 +129,28 @@ function Main_Logic.connectEvents()
     Registry.UserInputService.JumpRequest:Connect(function()
         Misc.applyInfiniteJump()
     end)
+    
+    -- Auto-Load Config on start
+    task.spawn(function()
+        wait(1)
+        Config.loadConfig()
+    end)
+
+    -- Keybind Listeners
+    Registry.UserInputService.InputBegan:Connect(function(input, processed)
+        if processed then return end
+        
+        if input.KeyCode == Registry.rageKeybind then
+            Registry.rageAimbotEnabled = not Registry.rageAimbotEnabled
+            print("[RAGE] 🌪️ Toggled via Keybind: " .. (Registry.rageAimbotEnabled and "ON" or "OFF"))
+            
+            -- Sync UI if it exists
+            local updateFunc = _G.ConfigRegistry["Rage Aimbot"]
+            if updateFunc then
+                updateFunc(Registry.rageAimbotEnabled)
+            end
+        end
+    end)
 end
 
 --[[
@@ -232,6 +254,12 @@ function Main_Logic.startLoops()
 
         -- Continuous Shrink check
         Misc.applyShrink()
+
+        -- Periodic Auto-Save
+        if Registry.autoSaveEnabled and currentTime - Registry.lastAutoSave >= Registry.autoSaveInterval then
+            Registry.lastAutoSave = currentTime
+            Config.saveConfig()
+        end
 
         -- Noclip
         Misc.applyNoclip()

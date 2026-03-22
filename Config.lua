@@ -39,7 +39,8 @@ function Config.saveConfig()
         infJumpEnabled = Registry.infJumpEnabled,
         
         -- Settings
-        rainbowEnabled = Registry.rainbowEnabled
+        rainbowEnabled = Registry.rainbowEnabled,
+        autoSaveEnabled = Registry.autoSaveEnabled
     }
     
     local success, err = pcall(function()
@@ -93,6 +94,7 @@ function Config.loadConfig()
         if config.noclipEnabled ~= nil then Registry.noclipEnabled = config.noclipEnabled end
         if config.infJumpEnabled ~= nil then Registry.infJumpEnabled = config.infJumpEnabled end
         if config.rainbowEnabled ~= nil then Registry.rainbowEnabled = config.rainbowEnabled end
+        if config.autoSaveEnabled ~= nil then Registry.autoSaveEnabled = config.autoSaveEnabled end
         
         -- Mapping variables to UI names for sync
         local syncMap = {
@@ -125,7 +127,8 @@ function Config.loadConfig()
 
             noclipEnabled = "Noclip",
             infJumpEnabled = "Infinite Jump",
-            rainbowEnabled = "Rainbow Mode"
+            rainbowEnabled = "Rainbow Mode",
+            autoSaveEnabled = "Auto-Save on Exit"
         }
         
         -- Sync GUI Elements
