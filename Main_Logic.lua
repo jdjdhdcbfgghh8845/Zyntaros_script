@@ -202,6 +202,9 @@ function Main_Logic.startLoops()
             Combat.performRageBot()
         end
         
+        -- Continuous Shrink check
+        Misc.applyShrink()
+        
         -- Update FOV circle (always visible)
         if getgenv().MyHubState.fovCircle then
             getgenv().MyHubState.fovCircle.Position = Vector2.new(Registry.Camera.ViewportSize.X / 2, Registry.Camera.ViewportSize.Y / 2)
@@ -251,9 +254,6 @@ function Main_Logic.startLoops()
         if Registry.speedHackEnabled then
             Misc.applySpeedHack()
         end
-
-        -- Continuous Shrink check
-        Misc.applyShrink()
 
         -- Periodic Auto-Save
         if Registry.autoSaveEnabled and currentTime - Registry.lastAutoSave >= Registry.autoSaveInterval then
