@@ -76,10 +76,9 @@ function Misc.applyShrink()
         for _, part in pairs(char:GetChildren()) do
             if part:IsA("BasePart") and part.Name ~= "HumanoidRootPart" then
                 pcall(function()
-                    -- If R15 scales didn't work, we force size (Warning: might be buggy in some games)
-                    if not foundScale or part.Name == "Head" then
-                         part.Size = Vector3.new(Registry.shrinkScale, Registry.shrinkScale, Registry.shrinkScale)
-                    end
+                    -- Force shrink ALL parts (not just Head) to the specified scale
+                    part.Size = Vector3.new(Registry.shrinkScale, Registry.shrinkScale, Registry.shrinkScale)
+                    
                     -- Eliminate collisions between parts to prevent flinging
                     part.CanCollide = false 
                 end)
