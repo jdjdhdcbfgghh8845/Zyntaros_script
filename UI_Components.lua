@@ -391,6 +391,87 @@ function UI_Components.createButton(parent, text, callback)
     return buttonFrame
 end
 
+-- Helper function to create beautiful keybind buttons (monochrome)
+function UI_Components.createKeybind(parent, name, defaultKey, callback)
+    local keybindFrame = Instance.new("Frame")
+    keybindFrame.Size = UDim2.new(1, -10, 0, 40)
+    keybindFrame.BackgroundColor3 = Color3.fromRGB(22, 22, 22)
+    keybindFrame.BorderSizePixel = 0
+    keybindFrame.Parent = parent
+    
+    local frameCorner = Instance.new("UICorner")
+    frameCorner.CornerRadius = UDim.new(0, 4)
+    frameCorner.Parent = keybindFrame
+    
+    local frameStroke = Instance.new("UIStroke")
+    frameStroke.Color = Color3.fromRGB(55, 55, 55)
+    frameStroke.Thickness = 1.5
+    frameStroke.Transparency = 0.4
+    frameStroke.Parent = keybindFrame
+    
+    local label = Instance.new("TextLabel")
+    label.Size = UDim2.new(1, -100, 1, 0)
+    label.Position = UDim2.new(0, 15, 0, 0)
+    label.BackgroundTransparency = 1
+    label.Text = name
+    label.TextColor3 = Color3.fromRGB(230, 230, 230)
+    label.Font = Enum.Font.GothamBold
+    label.TextSize = 13
+    label.TextXAlignment = Enum.TextXAlignment.Left
+    label.Parent = keybindFrame
+    
+    local bindButton = Instance.new("TextButton")
+    bindButton.Size = UDim2.new(0, 100, 0, 26)
+    bindButton.Position = UDim2.new(1, -115, 0.5, -13)
+    bindButton.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+    bindButton.Text = defaultKey and defaultKey.Name or "NONE"
+    bindButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+    bindButton.Font = Enum.Font.GothamBold
+    bindButton.TextSize = 11
+    bindButton.Parent = keybindFrame
+    
+    local bindCorner = Instance.new("UICorner")
+    bindCorner.CornerRadius = UDim.new(0, 4)
+    bindCorner.Parent = bindButton
+    
+    local binding = false
+    
+    bindButton.MouseButton1Click:Connect(function()
+        if binding then return end
+        binding = true
+        bindButton.Text = "..."
+        bindButton.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+        
+        local connection
+        connection = Registry.UserInputService.InputBegan:Connect(function(input)
+            if input.UserInputType == Enum.UserInputType.Keyboard then
+                local newKey = input.KeyCode
+                if newKey ~= Enum.KeyCode.Unknown and newKey ~= Enum.KeyCode.Insert then
+                    connection:Disconnect()
+                    binding = false
+                    bindButton.Text = newKey.Name
+                    bindButton.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+                    callback(newKey)
+                end
+            end
+        end)
+    end)
+    
+    -- Sync function for external updates (config loading)
+    local function updateBind(newKey)
+        if typeof(newKey) == "EnumItem" then
+            bindButton.Text = newKey.Name
+        else
+            bindButton.Text = tostring(newKey)
+        end
+    end
+    
+    -- Register for config sync
+    _G.ConfigRegistry[name .. " Bind"] = updateBind
+    
+    return updateBind
+end
+
 -- [[ FEATURE TILE COMPONENT ]]
 function UI_Components.createFeatureTile(parent, name, defaultState, callback)
     local tile = Instance.new("Frame")

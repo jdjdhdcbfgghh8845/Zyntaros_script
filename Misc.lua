@@ -87,12 +87,24 @@ end
 function Misc.updateThirdPerson()
     pcall(function()
         if Registry.isThirdPerson then
+            -- Force Classic camera mode to bypass first-person lock
+            Registry.LocalPlayer.CameraMode = Enum.CameraMode.Classic
             Registry.LocalPlayer.CameraMaxZoomDistance = 50
             Registry.LocalPlayer.CameraMinZoomDistance = 10
-            -- Force zoom out slightly if current distance is too small
+            
+            -- Force a small wait and then zoom out if we were in 1st person
+            task.spawn(function()
+                task.wait(0.1)
+                if Registry.isThirdPerson then
+                    Registry.LocalPlayer.CameraMinZoomDistance = 5 -- Allow closer but not 1st person
+                end
+            end)
         else
+            -- Restore (default Roblox behavior is often 0.5-0.5 for 1st person or large for 3rd)
+            -- We'll assume the user wants to return to whatever the game default was or 1st person
             Registry.LocalPlayer.CameraMaxZoomDistance = 0.5
             Registry.LocalPlayer.CameraMinZoomDistance = 0.5
+            -- Note: We don't force CameraMode.LockFirstPerson back because it might annoy the user
         end
     end)
 end

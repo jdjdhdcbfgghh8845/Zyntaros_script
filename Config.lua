@@ -45,8 +45,15 @@ function Config.saveConfig()
         
         -- Settings
         rainbowEnabled = Registry.rainbowEnabled,
-        autoSaveEnabled = Registry.autoSaveEnabled
+        autoSaveEnabled = Registry.autoSaveEnabled,
+        
+        -- Keybinds (Stored as strings)
+        keybinds = {}
     }
+    
+    for name, key in pairs(Registry.Keybinds) do
+        config.keybinds[name] = key.Name
+    end
     
     local success, err = pcall(function()
         writefile("MultihackConfig.json", Registry.HttpService:JSONEncode(config))
@@ -107,6 +114,15 @@ function Config.loadConfig()
         if config.infJumpEnabled ~= nil then Registry.infJumpEnabled = config.infJumpEnabled end
         if config.rainbowEnabled ~= nil then Registry.rainbowEnabled = config.rainbowEnabled end
         if config.autoSaveEnabled ~= nil then Registry.autoSaveEnabled = config.autoSaveEnabled end
+        
+        -- Load Keybinds
+        if config.keybinds then
+            for name, keyName in pairs(config.keybinds) do
+                pcall(function()
+                    Registry.Keybinds[name] = Enum.KeyCode[keyName]
+                end)
+            end
+        end
         
         -- Mapping variables to UI names for sync
         local syncMap = {

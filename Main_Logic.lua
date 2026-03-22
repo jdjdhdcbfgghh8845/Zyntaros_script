@@ -140,26 +140,57 @@ function Main_Logic.connectEvents()
         Config.loadConfig()
     end)
 
-    -- Keybind Listeners
+    -- Universal Keybind Listener
     Registry.UserInputService.InputBegan:Connect(function(input, processed)
         if processed then return end
         
-        if input.KeyCode == Registry.rageKeybind then
-            Registry.rageAimbotEnabled = not Registry.rageAimbotEnabled
-            print("[RAGE] 🌪️ Toggled via Keybind: " .. (Registry.rageAimbotEnabled and "ON" or "OFF"))
-            
-            -- Sync UI if it exists
-            local updateFunc = _G.ConfigRegistry["Rage Aimbot"]
-            if updateFunc then
-                updateFunc(Registry.rageAimbotEnabled)
-            end
-        end
-        
-        -- Toggle Third Person on C
-        if input.KeyCode == Registry.thirdPersonKey then
-            local Misc = getModule("Misc")
-            if Misc then
-                Misc.toggleThirdPerson()
+        for featureName, bindKey in pairs(Registry.Keybinds) do
+            if input.KeyCode == bindKey then
+                if featureName == "Aimbot" then
+                    Registry.aimbotEnabled = not Registry.aimbotEnabled
+                    local update = _G.ConfigRegistry["Aimbot"]
+                    if update then update(Registry.aimbotEnabled) end
+                    print("[AIMBOT] Toggled: " .. tostring(Registry.aimbotEnabled))
+                
+                elseif featureName == "Trigger Bot" then
+                    Registry.triggerBotEnabled = not Registry.triggerBotEnabled
+                    local update = _G.ConfigRegistry["Trigger Bot"]
+                    if update then update(Registry.triggerBotEnabled) end
+                    print("[TRIGGER] Toggled: " .. tostring(Registry.triggerBotEnabled))
+                
+                elseif featureName == "Rage Aimbot" then
+                    Registry.rageAimbotEnabled = not Registry.rageAimbotEnabled
+                    local update = _G.ConfigRegistry["Rage Aimbot"]
+                    if update then update(Registry.rageAimbotEnabled) end
+                    print("[RAGE] Toggled: " .. tostring(Registry.rageAimbotEnabled))
+                
+                elseif featureName == "Third Person View" then
+                    local Misc = getgenv().MyHubState.Misc
+                    if Misc then Misc.toggleThirdPerson() end
+                
+                elseif featureName == "Fly Hack" then
+                    Registry.flyEnabled = not Registry.flyEnabled
+                    local update = _G.ConfigRegistry["Fly Hack"]
+                    if update then update(Registry.flyEnabled) end
+                    print("[FLY] Toggled: " .. tostring(Registry.flyEnabled))
+                
+                elseif featureName == "Noclip" then
+                    Registry.noclipEnabled = not Registry.noclipEnabled
+                    local update = _G.ConfigRegistry["Noclip"]
+                    if update then update(Registry.noclipEnabled) end
+                    print("[NOCLIP] Toggled: " .. tostring(Registry.noclipEnabled))
+                
+                elseif featureName == "Speed Hack" then
+                    Registry.speedHackEnabled = not Registry.speedHackEnabled
+                    local update = _G.ConfigRegistry["Speed Hack"]
+                    if update then update(Registry.speedHackEnabled) end
+                    print("[SPEED] Toggled: " .. tostring(Registry.speedHackEnabled))
+                end
+                
+                -- Auto-Save on keybind toggle
+                if Registry.autoSaveEnabled then
+                    Config.saveConfig()
+                end
             end
         end
     end)

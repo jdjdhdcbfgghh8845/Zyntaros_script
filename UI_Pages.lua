@@ -30,42 +30,48 @@ function UI_Pages.build()
     -- [[ AIMBOT PAGE TILES ]]
     local aimbotSettings, aimbotIcon = UI_Components.createFeatureTile(AimbotPage, "Aimbot", false, function(state)
         Registry.aimbotEnabled = state
+        if Registry.autoSaveEnabled then Config.saveConfig() end
         if state then print("[AIMBOT] 🎯 Enabled") end
     end)
     aimbotIcon.Text = "🎯"
     
     UI_Components.createSection(aimbotSettings, "Aimbot Core")
-    UI_Components.createSlider(aimbotSettings, "Aimbot Smoothness", 0.05, 1.0, 0.2, function(val) Registry.aimbotSmoothness = val end)
-    UI_Components.createSlider(aimbotSettings, "Aimbot FOV Size", 50, 2000, 200, function(val) Registry.aimbotFOV = val end)
-    UI_Components.createToggle(aimbotSettings, "Wall Check", true, function(state) Registry.wallCheckEnabled = state end)
-    UI_Components.createToggle(aimbotSettings, "Team Check", true, function(state) Registry.teamCheckEnabled = state end)
+    UI_Components.createKeybind(aimbotSettings, "Aimbot", Registry.Keybinds["Aimbot"], function(key) Registry.Keybinds["Aimbot"] = key if Registry.autoSaveEnabled then Config.saveConfig() end end)
+    UI_Components.createSlider(aimbotSettings, "Aimbot Smoothness", 0.05, 1.0, 0.2, function(val) Registry.aimbotSmoothness = val if Registry.autoSaveEnabled then Config.saveConfig() end end)
+    UI_Components.createSlider(aimbotSettings, "Aimbot FOV Size", 50, 2000, 200, function(val) Registry.aimbotFOV = val if Registry.autoSaveEnabled then Config.saveConfig() end end)
+    UI_Components.createToggle(aimbotSettings, "Wall Check", true, function(state) Registry.wallCheckEnabled = state if Registry.autoSaveEnabled then Config.saveConfig() end end)
+    UI_Components.createToggle(aimbotSettings, "Team Check", true, function(state) Registry.teamCheckEnabled = state if Registry.autoSaveEnabled then Config.saveConfig() end end)
     
     UI_Components.createSection(aimbotSettings, "Advanced")
-    UI_Components.createToggle(aimbotSettings, "Aimbot Prediction", false, function(state) Registry.predictionEnabled = state end)
-    UI_Components.createSlider(aimbotSettings, "Prediction Strength", 0.05, 0.5, 0.15, function(val) Registry.predictionMultiplier = val end)
-    UI_Components.createToggle(aimbotSettings, "Auto Shoot (Aimbot)", false, function(state) Registry.aimbotAutoShoot = state end)
+    UI_Components.createToggle(aimbotSettings, "Aimbot Prediction", false, function(state) Registry.predictionEnabled = state if Registry.autoSaveEnabled then Config.saveConfig() end end)
+    UI_Components.createSlider(aimbotSettings, "Prediction Strength", 0.05, 0.5, 0.15, function(val) Registry.predictionMultiplier = val if Registry.autoSaveEnabled then Config.saveConfig() end end)
+    UI_Components.createToggle(aimbotSettings, "Auto Shoot (Aimbot)", false, function(state) Registry.aimbotAutoShoot = state if Registry.autoSaveEnabled then Config.saveConfig() end end)
     
     local rageSettings, rageIcon = UI_Components.createFeatureTile(AimbotPage, "Rage Aimbot", false, function(state)
         Registry.rageAimbotEnabled = state
+        if Registry.autoSaveEnabled then Config.saveConfig() end
         if state then print("[RAGE AIMBOT] 🌪️ Enabled") end
     end)
     rageIcon.Text = "🌪️"
     
     UI_Components.createSection(rageSettings, "Orbit Configuration")
-    UI_Components.createSlider(rageSettings, "Orbit Speed", 1, 50, 10, function(val) Registry.rageOrbitSpeed = val end)
-    UI_Components.createSlider(rageSettings, "Orbit Radius", 1, 20, 3, function(val) Registry.rageOrbitRadius = val end)
-    UI_Components.createSlider(rageSettings, "Orbit Height", 0, 20, 5, function(val) Registry.rageOrbitHeight = val end)
-    UI_Components.createSlider(rageSettings, "Max Teleport Distance", 10, 1000, 50, function(val) Registry.rageMaxDistance = val end)
+    UI_Components.createKeybind(rageSettings, "Rage Aimbot", Registry.Keybinds["Rage Aimbot"], function(key) Registry.Keybinds["Rage Aimbot"] = key if Registry.autoSaveEnabled then Config.saveConfig() end end)
+    UI_Components.createSlider(rageSettings, "Orbit Speed", 1, 50, 10, function(val) Registry.rageOrbitSpeed = val if Registry.autoSaveEnabled then Config.saveConfig() end end)
+    UI_Components.createSlider(rageSettings, "Orbit Radius", 1, 20, 3, function(val) Registry.rageOrbitRadius = val if Registry.autoSaveEnabled then Config.saveConfig() end end)
+    UI_Components.createSlider(rageSettings, "Orbit Height", 0, 20, 5, function(val) Registry.rageOrbitHeight = val if Registry.autoSaveEnabled then Config.saveConfig() end end)
+    UI_Components.createSlider(rageSettings, "Max Teleport Distance", 10, 1000, 50, function(val) Registry.rageMaxDistance = val if Registry.autoSaveEnabled then Config.saveConfig() end end)
 
     local triggerSettings, triggerIcon = UI_Components.createFeatureTile(AimbotPage, "Trigger Bot", false, function(state)
         Registry.triggerBotEnabled = state
+        if Registry.autoSaveEnabled then Config.saveConfig() end
         if state then print("[TRIGGER BOT] 🖱️ Enabled") end
     end)
     triggerIcon.Text = "🖱️"
     
     UI_Components.createSection(triggerSettings, "Trigger Settings")
-    UI_Components.createToggle(triggerSettings, "Smart Headshot", true, function(state) Registry.triggerBotSmart = state end)
-    UI_Components.createSlider(triggerSettings, "Auto-Click Delay", 0.001, 0.5, 0.001, function(val) Registry.ESP_SETTINGS.TriggerDelay = val end)
+    UI_Components.createKeybind(triggerSettings, "Trigger Bot", Registry.Keybinds["Trigger Bot"], function(key) Registry.Keybinds["Trigger Bot"] = key if Registry.autoSaveEnabled then Config.saveConfig() end end)
+    UI_Components.createToggle(triggerSettings, "Smart Headshot", true, function(state) Registry.triggerBotSmart = state if Registry.autoSaveEnabled then Config.saveConfig() end end)
+    UI_Components.createSlider(triggerSettings, "Auto-Click Delay", 0.001, 0.5, 0.001, function(val) Registry.ESP_SETTINGS.TriggerDelay = val if Registry.autoSaveEnabled then Config.saveConfig() end end)
 
     -- [[ VISUALS PAGE TILES ]]
     local espSettings, espIcon = UI_Components.createFeatureTile(VisualsPage, "ESP", true, function(state)
@@ -75,11 +81,11 @@ function UI_Pages.build()
     espIcon.Text = "👤"
     
     UI_Components.createSection(espSettings, "ESP Options")
-    UI_Components.createToggle(espSettings, "Show Names", true, function(state) Registry.ESP_SETTINGS.NameEnabled = state end)
-    UI_Components.createToggle(espSettings, "Show Health", true, function(state) Registry.ESP_SETTINGS.HealthEnabled = state end)
-    UI_Components.createToggle(espSettings, "Show Distance", true, function(state) Registry.ESP_SETTINGS.DistanceEnabled = state end)
-    UI_Components.createToggle(espSettings, "Box Highlight", true, function(state) Registry.ESP_SETTINGS.BoxEnabled = state end)
-    UI_Components.createSlider(espSettings, "Max Draw Distance", 500, 10000, 5000, function(val) Registry.ESP_SETTINGS.MaxDistance = val end)
+    UI_Components.createToggle(espSettings, "Show Names", true, function(state) Registry.ESP_SETTINGS.NameEnabled = state if Registry.autoSaveEnabled then Config.saveConfig() end end)
+    UI_Components.createToggle(espSettings, "Show Health", true, function(state) Registry.ESP_SETTINGS.HealthEnabled = state if Registry.autoSaveEnabled then Config.saveConfig() end end)
+    UI_Components.createToggle(espSettings, "Show Distance", true, function(state) Registry.ESP_SETTINGS.DistanceEnabled = state if Registry.autoSaveEnabled then Config.saveConfig() end end)
+    UI_Components.createToggle(espSettings, "Box Highlight", true, function(state) Registry.ESP_SETTINGS.BoxEnabled = state if Registry.autoSaveEnabled then Config.saveConfig() end end)
+    UI_Components.createSlider(espSettings, "Max Draw Distance", 500, 10000, 5000, function(val) Registry.ESP_SETTINGS.MaxDistance = val if Registry.autoSaveEnabled then Config.saveConfig() end end)
 
     local skelSettings, skelIcon = UI_Components.createFeatureTile(VisualsPage, "Skeleton ESP", false, function(state)
         Registry.ESP_SETTINGS.SkeletonEnabled = state
@@ -90,12 +96,12 @@ function UI_Pages.build()
     effectIcon.Text = "✨"
     
     UI_Components.createSection(effectSettings, "World Effects")
-    UI_Components.createToggle(effectSettings, "Chams", false, function(state) _G.chamsEnabled = state end)
-    UI_Components.createToggle(effectSettings, "Tracers", false, function(state) _G.tracersEnabled = state end)
-    UI_Components.createToggle(effectSettings, "Enemy Glow", false, function(state) _G.glowEnabled = state end)
-    UI_Components.createToggle(effectSettings, "Bullet Tracers", false, function(state) Registry.bulletTracersEnabled = state end)
-    UI_Components.createToggle(effectSettings, "Target HUD", false, function(state) Registry.targetHUDEnabled = state end)
-    UI_Components.createSlider(effectSettings, "Tracer Duration", 0.1, 2.0, 0.5, function(val) Registry.bulletTracerDuration = val end)
+    UI_Components.createToggle(effectSettings, "Chams", false, function(state) _G.chamsEnabled = state if Registry.autoSaveEnabled then Config.saveConfig() end end)
+    UI_Components.createToggle(effectSettings, "Tracers", false, function(state) _G.tracersEnabled = state if Registry.autoSaveEnabled then Config.saveConfig() end end)
+    UI_Components.createToggle(effectSettings, "Enemy Glow", false, function(state) _G.glowEnabled = state if Registry.autoSaveEnabled then Config.saveConfig() end end)
+    UI_Components.createToggle(effectSettings, "Bullet Tracers", false, function(state) Registry.bulletTracersEnabled = state if Registry.autoSaveEnabled then Config.saveConfig() end end)
+    UI_Components.createToggle(effectSettings, "Target HUD", false, function(state) Registry.targetHUDEnabled = state if Registry.autoSaveEnabled then Config.saveConfig() end end)
+    UI_Components.createSlider(effectSettings, "Tracer Duration", 0.1, 2.0, 0.5, function(val) Registry.bulletTracerDuration = val if Registry.autoSaveEnabled then Config.saveConfig() end end)
 
     local worldSettings, worldIcon = UI_Components.createFeatureTile(VisualsPage, "World Themes", true, function(state)
         Registry.worldVisualsEnabled = state
@@ -103,43 +109,52 @@ function UI_Pages.build()
     worldIcon.Text = "🌌"
     
     UI_Components.createSection(worldSettings, "Theme Control")
-    UI_Components.createToggle(worldSettings, "Rainbow Mode", false, function(state) _G.WorldVisuals.toggleRainbow(state) end)
-    UI_Components.createToggle(worldSettings, "Speed Blur", false, function(state) _G.WorldVisuals.toggleSpeedBlur(state) end)
-    UI_Components.createToggle(worldSettings, "Pulse Effect", false, function(state) _G.WorldVisuals.togglePulse(state) end)
+    UI_Components.createToggle(worldSettings, "Rainbow Mode", false, function(state) _G.WorldVisuals.toggleRainbow(state) if Registry.autoSaveEnabled then Config.saveConfig() end end)
+    UI_Components.createToggle(worldSettings, "Speed Blur", false, function(state) _G.WorldVisuals.toggleSpeedBlur(state) if Registry.autoSaveEnabled then Config.saveConfig() end end)
+    UI_Components.createToggle(worldSettings, "Pulse Effect", false, function(state) _G.WorldVisuals.togglePulse(state) if Registry.autoSaveEnabled then Config.saveConfig() end end)
     UI_Components.createSection(worldSettings, "Post-Processing")
-    UI_Components.createSlider(worldSettings, "Bloom Intensity", 0.1, 2.0, 0.5, function(val) _G.WorldVisuals.setBloomIntensity(val) end)
-    UI_Components.createSlider(worldSettings, "Fog Distance", 100, 5000, 600, function(val) _G.WorldVisuals.setFogDistance(val) end)
+    UI_Components.createSlider(worldSettings, "Bloom Intensity", 0.1, 2.0, 0.5, function(val) _G.WorldVisuals.setBloomIntensity(val) if Registry.autoSaveEnabled then Config.saveConfig() end end)
+    UI_Components.createSlider(worldSettings, "Fog Distance", 100, 5000, 600, function(val) _G.WorldVisuals.setFogDistance(val) if Registry.autoSaveEnabled then Config.saveConfig() end end)
 
     -- [[ MISC PAGE TILES ]]
     local speedSettings, speedIcon = UI_Components.createFeatureTile(MiscPage, "Speed Hack", false, function(state)
         Registry.speedHackEnabled = state
+        if Registry.autoSaveEnabled then Config.saveConfig() end
         Misc.applySpeedHack()
     end)
     speedIcon.Text = "⚡"
-    UI_Components.createSlider(speedSettings, "Speed Multiplier", 1, 10, 2, function(val) Registry.speedMultiplier = val end)
+    UI_Components.createKeybind(speedSettings, "Speed Hack", Registry.Keybinds["Speed Hack"], function(key) Registry.Keybinds["Speed Hack"] = key if Registry.autoSaveEnabled then Config.saveConfig() end end)
+    UI_Components.createSlider(speedSettings, "Speed Multiplier", 1, 10, 2, function(val) Registry.speedMultiplier = val if Registry.autoSaveEnabled then Config.saveConfig() end end)
 
     local jumpSettings, jumpIcon = UI_Components.createFeatureTile(MiscPage, "Infinite Jump", false, function(state)
         Registry.infJumpEnabled = state
+        if Registry.autoSaveEnabled then Config.saveConfig() end
     end)
     jumpIcon.Text = "🦘"
 
     local noclipSettings, noclipIcon = UI_Components.createFeatureTile(MiscPage, "Noclip", false, function(state)
         Registry.noclipEnabled = state
+        if Registry.autoSaveEnabled then Config.saveConfig() end
     end)
     noclipIcon.Text = "👻"
+    UI_Components.createKeybind(noclipSettings, "Noclip", Registry.Keybinds["Noclip"], function(key) Registry.Keybinds["Noclip"] = key if Registry.autoSaveEnabled then Config.saveConfig() end end)
 
     local flySettings, flyIcon = UI_Components.createFeatureTile(MiscPage, "Fly Hack", false, function(state)
         Registry.flyEnabled = state
+        if Registry.autoSaveEnabled then Config.saveConfig() end
         Misc.updateFly()
     end)
     flyIcon.Text = "🕊️"
-    UI_Components.createSlider(flySettings, "Fly Speed", 10, 200, 50, function(val) Registry.flySpeed = val end)
+    UI_Components.createKeybind(flySettings, "Fly Hack", Registry.Keybinds["Fly Hack"], function(key) Registry.Keybinds["Fly Hack"] = key if Registry.autoSaveEnabled then Config.saveConfig() end end)
+    UI_Components.createSlider(flySettings, "Fly Speed", 10, 200, 50, function(val) Registry.flySpeed = val if Registry.autoSaveEnabled then Config.saveConfig() end end)
 
     local tpSettings, tpIcon = UI_Components.createFeatureTile(MiscPage, "Third Person View", false, function(state)
         Registry.isThirdPerson = state
+        if Registry.autoSaveEnabled then Config.saveConfig() end
         Misc.updateThirdPerson()
     end)
     tpIcon.Text = "🧍"
+    UI_Components.createKeybind(tpSettings, "Third Person View", Registry.Keybinds["Third Person View"], function(key) Registry.Keybinds["Third Person View"] = key if Registry.autoSaveEnabled then Config.saveConfig() end end)
 
 
     local camSettings, camIcon = UI_Components.createFeatureTile(MiscPage, "Camera/FOV", false, function(state)
@@ -201,11 +216,10 @@ function UI_Pages.build()
     UI_Components.createSection(infoSettings, "Script Info")
     UI_Components.createToggle(infoSettings, "Show FPS Counter", false, function(state) end)
     
-    UI_Components.createSection(infoSettings, "Keybinds")
-    UI_Components.createToggle(infoSettings, "Menu Key: [INSERT]", true, function(s) end)
-    UI_Components.createToggle(infoSettings, "Rage Bot Key: [X]", true, function(s) end)
-    UI_Components.createToggle(infoSettings, "Aimbot Key: [Z]", true, function(s) end)
-    UI_Components.createToggle(infoSettings, "Trigger Key: [H]", true, function(s) end)
+    UI_Components.createSection(infoSettings, "Keybinds Info")
+    UI_Components.createToggle(infoSettings, "Standard Toggle: [CLICK TILE]", true, function(s) end)
+    UI_Components.createToggle(infoSettings, "Quick Menu: [INSERT]", true, function(s) end)
+    UI_Components.createButton(infoSettings, "Forced Save Config Now", function() Config.saveConfig() end)
 end
 
 return UI_Pages

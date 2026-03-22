@@ -138,6 +138,17 @@ Registry.lastAimbotShot = 0 -- Track last shot time
 Registry.aimbotShootDelay = 0.1 -- Delay between aimbot shots
 Registry.aimbotMode = "Mouse" -- "Camera" or "Mouse" (Stealth)
 
+-- Universal Keybind Registry
+Registry.Keybinds = {
+    ["Aimbot"] = Enum.KeyCode.Z,
+    ["Trigger Bot"] = Enum.KeyCode.H,
+    ["Rage Aimbot"] = Enum.KeyCode.X,
+    ["Third Person View"] = Enum.KeyCode.C,
+    ["Fly Hack"] = Enum.KeyCode.F, -- Default F for Fly
+    ["Noclip"] = Enum.KeyCode.V, -- Default V for Noclip
+    ["Speed Hack"] = Enum.KeyCode.B, -- Default B for Speed
+}
+
 -- Camera FOV variables
 Registry.customFOVEnabled = false
 Registry.customFOV = 70 -- Default Roblox FOV is 70
@@ -149,7 +160,9 @@ Registry.rageOrbitSpeed = 10 -- Speed of rotation
 Registry.rageOrbitRadius = 3 -- Distance from target
 Registry.rageOrbitHeight = 5 -- Height above target
 Registry.rageMaxDistance = 50 -- Max distance to teleport
-Registry.rageKeybind = Enum.KeyCode.X -- Default keybind for Rage toggle
+Registry.rageOrbitRadius = 3 -- Distance from target
+Registry.rageOrbitHeight = 5 -- Height above target
+Registry.rageMaxDistance = 50 -- Max distance to teleport
 
 
 
@@ -170,7 +183,8 @@ Registry.infJumpEnabled = false
 Registry.flyEnabled = false
 Registry.flySpeed = 50
 Registry.isThirdPerson = false
-Registry.thirdPersonKey = Enum.KeyCode.C -- Default keybind for 3rd person toggle
+Registry.flySpeed = 50
+Registry.isThirdPerson = false
 
 -- Whitelist variables
 Registry.whitelist = {} -- Table of whitelisted player names
