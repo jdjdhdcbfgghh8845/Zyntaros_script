@@ -32,6 +32,7 @@ function Config.saveConfig()
         bulletTracersEnabled = Registry.bulletTracersEnabled,
         bulletTracerColor = {Registry.bulletTracerColor.R, Registry.bulletTracerColor.G, Registry.bulletTracerColor.B},
         bulletTracerDuration = Registry.bulletTracerDuration,
+        targetHUDEnabled = Registry.targetHUDEnabled,
         
         -- Misc
         speedMultiplier = Registry.speedMultiplier,
@@ -95,6 +96,7 @@ function Config.loadConfig()
         if config.bulletTracerColor ~= nil then 
             Registry.bulletTracerColor = Color3.new(config.bulletTracerColor[1], config.bulletTracerColor[2], config.bulletTracerColor[3]) 
         end
+        if config.targetHUDEnabled ~= nil then Registry.targetHUDEnabled = config.targetHUDEnabled end
         
         if config.speedMultiplier ~= nil then Registry.speedMultiplier = config.speedMultiplier end
         if config.flyEnabled ~= nil then Registry.flyEnabled = config.flyEnabled end
@@ -132,6 +134,7 @@ function Config.loadConfig()
             glowEnabled = "Enemy Glow",
             bulletTracersEnabled = "Bullet Tracers",
             bulletTracerDuration = "Tracer Duration",
+            targetHUDEnabled = "Target HUD (Crosshair)",
             
             speedMultiplier = "Speed Multiplier",
             flyEnabled = "Fly Hack",

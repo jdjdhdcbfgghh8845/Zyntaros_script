@@ -155,4 +155,140 @@ function Visuals.updateSkeleton()
     end
 end
 
+--[[
+    TARGET HUD - Display info about current target near crosshair
+--]]
+local targetHUD = nil
+local targetHUDFrame = nil
+local targetHUDName = nil
+local targetHUDHealthBar = nil
+local targetHUDDistance = nil
+
+function Visuals.createTargetHUD()
+    if targetHUD then return end
+    
+    targetHUD = Instance.new("ScreenGui")
+    targetHUD.Name = "TargetHUD"
+    targetHUD.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+    targetHUD.ResetOnSpawn = false
+    targetHUD.Parent = Registry.CoreGui
+    
+    targetHUDFrame = Instance.new("Frame")
+    targetHUDFrame.Name = "MainFrame"
+    targetHUDFrame.Size = UDim2.new(0, 180, 0, 75)
+    -- Position slightly below and to the right of screen center
+    targetHUDFrame.Position = UDim2.new(0.5, 40, 0.5, 40)
+    targetHUDFrame.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
+    targetHUDFrame.BackgroundTransparency = 0.3
+    targetHUDFrame.BorderSizePixel = 0
+    targetHUDFrame.Visible = false
+    targetHUDFrame.Parent = targetHUD
+    
+    local corner = Instance.new("UICorner")
+    corner.CornerRadius = UDim.new(0, 10)
+    corner.Parent = targetHUDFrame
+    
+    local stroke = Instance.new("UIStroke")
+    stroke.Thickness = 1.5
+    stroke.Color = Color3.fromRGB(255, 255, 255)
+    stroke.Transparency = 0.7
+    stroke.Parent = targetHUDFrame
+    
+    -- Sub-container for padding
+    local container = Instance.new("Frame")
+    container.Size = UDim2.new(1, -24, 1, -24)
+    container.Position = UDim2.new(0, 12, 0, 12)
+    container.BackgroundTransparency = 1
+    container.Parent = targetHUDFrame
+    
+    -- Name Label (Clean modern font style)
+    targetHUDName = Instance.new("TextLabel")
+    targetHUDName.Size = UDim2.new(1, 0, 0, 20)
+    targetHUDName.BackgroundTransparency = 1
+    targetHUDName.Font = Enum.Font.GothamBold
+    targetHUDName.Text = "TARGET"
+    targetHUDName.TextColor3 = Color3.fromRGB(255, 255, 255)
+    targetHUDName.TextSize = 13
+    targetHUDName.TextXAlignment = Enum.TextXAlignment.Left
+    targetHUDName.Parent = container
+    
+    -- Health Bar Background
+    local healthBg = Instance.new("Frame")
+    healthBg.Size = UDim2.new(1, 0, 0, 6)
+    healthBg.Position = UDim2.new(0, 0, 0, 24)
+    healthBg.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+    healthBg.BorderSizePixel = 0
+    healthBg.Parent = container
+    
+    local hCorner = Instance.new("UICorner")
+    hCorner.CornerRadius = UDim.new(1, 0)
+    hCorner.Parent = healthBg
+    
+    -- Health Bar Foreground
+    targetHUDHealthBar = Instance.new("Frame")
+    targetHUDHealthBar.Size = UDim2.new(1, 0, 1, 0)
+    targetHUDHealthBar.BackgroundColor3 = Color3.fromRGB(0, 255, 120)
+    targetHUDHealthBar.BorderSizePixel = 0
+    targetHUDHealthBar.Parent = healthBg
+    
+    local hiCorner = Instance.new("UICorner")
+    hiCorner.CornerRadius = UDim.new(1, 0)
+    hiCorner.Parent = targetHUDHealthBar
+    
+    -- Distance Label
+    targetHUDDistance = Instance.new("TextLabel")
+    targetHUDDistance.Size = UDim2.new(1, 0, 0, 15)
+    targetHUDDistance.Position = UDim2.new(0, 0, 0, 36)
+    targetHUDDistance.BackgroundTransparency = 1
+    targetHUDDistance.Font = Enum.Font.Gotham
+    targetHUDDistance.Text = "Distance: --"
+    targetHUDDistance.TextColor3 = Color3.fromRGB(180, 180, 180)
+    targetHUDDistance.TextSize = 11
+    targetHUDDistance.TextXAlignment = Enum.TextXAlignment.Left
+    targetHUDDistance.Parent = container
+end
+
+function Visuals.updateTargetHUD()
+    if not Registry.targetHUDEnabled then
+        if targetHUDFrame then targetHUDFrame.Visible = false end
+        return
+    end
+    
+    if not targetHUD then Visuals.createTargetHUD() end
+    
+    local target = Registry.currentAimbotTarget
+    if target and target.Character then
+        local humanoid = target.Character:FindFirstChild("Humanoid")
+        local root = target.Character:FindFirstChild("HumanoidRootPart")
+        
+        if humanoid and root then
+            targetHUDFrame.Visible = true
+            targetHUDName.Text = (target.DisplayName or target.Name):upper()
+            
+            -- Smoothly interpolate health bar
+            local healthPercent = math.clamp(humanoid.Health / humanoid.MaxHealth, 0, 1)
+            local currentSize = targetHUDHealthBar.Size.X.Scale
+            local newSize = healthPercent
+            
+            -- Direct update (could be lerped if needed)
+            targetHUDHealthBar.Size = UDim2.new(newSize, 0, 1, 0)
+            targetHUDHealthBar.BackgroundColor3 = Color3.fromRGB(255, 50, 50):Lerp(Color3.fromRGB(0, 255, 120), healthPercent)
+            
+            -- Distance check
+            local localChar = Registry.LocalPlayer.Character
+            local localRoot = localChar and localChar:FindFirstChild("HumanoidRootPart")
+            if localRoot then
+                local dist = math.floor((localRoot.Position - root.Position).Magnitude)
+                targetHUDDistance.Text = "DISTANCE: " .. dist .. "M"
+            else
+                targetHUDDistance.Text = "DISTANCE: --"
+            end
+        else
+            targetHUDFrame.Visible = false
+        end
+    else
+        targetHUDFrame.Visible = false
+    end
+end
+
 return Visuals

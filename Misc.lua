@@ -129,7 +129,4 @@ function Misc.applyInfiniteJump()
     end
 end
 
-    end
-end
-
 return Misc

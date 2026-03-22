@@ -162,6 +162,7 @@ Registry.originalWalkSpeed = 16 -- Default Roblox walk speed
 Registry.bulletTracersEnabled = false
 Registry.bulletTracerColor = Color3.fromRGB(255, 0, 0)
 Registry.bulletTracerDuration = 0.5
+Registry.targetHUDEnabled = false
 
 -- Misc variables
 Registry.noclipEnabled = false

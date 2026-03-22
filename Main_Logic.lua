@@ -5,8 +5,12 @@ local Combat = getgenv().MyHubState.Combat
 local Visuals = getgenv().MyHubState.Visuals
 local Effects = getgenv().MyHubState.Effects
 local World = getgenv().MyHubState.World
-local Misc = getgenv().MyHubState.Misc
 local Config = getgenv().MyHubState.Config
+
+-- Helper to safely get modules (in case of dynamic loading issues)
+local function getModule(name)
+    return getgenv().MyHubState[name]
+end
 
 --[[
     CAMERA METATABLE HOOK (ANTI-CHEAT BYPASS)
@@ -124,7 +128,10 @@ function Main_Logic.connectEvents()
     end)
     
     Registry.UserInputService.JumpRequest:Connect(function()
-        Misc.applyInfiniteJump()
+        local Misc = getModule("Misc")
+        if Misc then
+            Misc.applyInfiniteJump()
+        end
     end)
     
     -- Auto-Load Config on start
@@ -150,7 +157,10 @@ function Main_Logic.connectEvents()
         
         -- Toggle Third Person on C
         if input.KeyCode == Registry.thirdPersonKey then
-            Misc.toggleThirdPerson()
+            local Misc = getModule("Misc")
+            if Misc then
+                Misc.toggleThirdPerson()
+            end
         end
     end)
 end
@@ -249,13 +259,19 @@ function Main_Logic.startLoops()
             World.updatePulse()
         end
 
-        -- Continuous Speed Hack check
-        if Registry.speedHackEnabled then
-            Misc.applySpeedHack()
-        end
+        -- Target HUD Update
+        Visuals.updateTargetHUD()
 
-        -- Fly Hack Update
-        Misc.updateFly()
+        -- Continuous Speed Hack check
+        local Misc = getModule("Misc")
+        if Misc then
+            if Registry.speedHackEnabled then
+                Misc.applySpeedHack()
+            end
+
+            -- Fly Hack Update
+            Misc.updateFly()
+        end
 
         -- Periodic Auto-Save
         if Registry.autoSaveEnabled and currentTime - Registry.lastAutoSave >= Registry.autoSaveInterval then

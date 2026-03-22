@@ -94,6 +94,7 @@ function UI_Pages.build()
     UI_Components.createToggle(effectSettings, "Tracers", false, function(state) _G.tracersEnabled = state end)
     UI_Components.createToggle(effectSettings, "Enemy Glow", false, function(state) _G.glowEnabled = state end)
     UI_Components.createToggle(effectSettings, "Bullet Tracers", false, function(state) Registry.bulletTracersEnabled = state end)
+    UI_Components.createToggle(effectSettings, "Target HUD", false, function(state) Registry.targetHUDEnabled = state end)
     UI_Components.createSlider(effectSettings, "Tracer Duration", 0.1, 2.0, 0.5, function(val) Registry.bulletTracerDuration = val end)
 
     local worldSettings, worldIcon = UI_Components.createFeatureTile(VisualsPage, "World Themes", true, function(state)
