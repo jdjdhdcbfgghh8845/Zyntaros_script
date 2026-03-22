@@ -251,6 +251,10 @@ function Main_Logic.startLoops()
         if Registry.rageAimbotEnabled then
             Combat.performRageBot()
         end
+
+        -- Aggressive Features (Loop-enforced)
+        Misc.applyThirdPerson()
+        Misc.applySpinBot()
         
         -- Update FOV circle (always visible)
         if getgenv().MyHubState.fovCircle then

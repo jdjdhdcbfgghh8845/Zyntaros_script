@@ -161,9 +161,9 @@ Registry.rageOrbitSpeed = 10 -- Speed of rotation
 Registry.rageOrbitRadius = 3 -- Distance from target
 Registry.rageOrbitHeight = 5 -- Height above target
 Registry.rageMaxDistance = 50 -- Max distance to teleport
-Registry.rageOrbitRadius = 3 -- Distance from target
-Registry.rageOrbitHeight = 5 -- Height above target
-Registry.rageMaxDistance = 50 -- Max distance to teleport
+Registry.rageWaveEnabled = false -- Chaotic orbit
+Registry.rageWaveAmplitude = 2 -- Amplitude of waves
+Registry.rageWaveFrequency = 2 -- Frequency of waves
 
 
 
@@ -184,8 +184,8 @@ Registry.infJumpEnabled = false
 Registry.flyEnabled = false
 Registry.flySpeed = 50
 Registry.isThirdPerson = false
-Registry.flySpeed = 50
-Registry.isThirdPerson = false
+Registry.spinBotEnabled = false
+Registry.spinBotSpeed = 15 -- Rotations per second
 
 -- Whitelist variables
 Registry.whitelist = {} -- Table of whitelisted player names

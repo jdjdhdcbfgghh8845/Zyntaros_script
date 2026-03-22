@@ -84,28 +84,25 @@ end
 --[[
     THIRD PERSON VIEW
 --]]
-function Misc.updateThirdPerson()
-    pcall(function()
-        if Registry.isThirdPerson then
-            -- Force Classic camera mode to bypass first-person lock
-            Registry.LocalPlayer.CameraMode = Enum.CameraMode.Classic
-            Registry.LocalPlayer.CameraMaxZoomDistance = 50
-            Registry.LocalPlayer.CameraMinZoomDistance = 10
-            
-            -- Force a small wait and then zoom out if we were in 1st person
-            task.spawn(function()
-                task.wait(0.1)
-                if Registry.isThirdPerson then
-                    Registry.LocalPlayer.CameraMinZoomDistance = 5 -- Allow closer but not 1st person
-                end
-            end)
-        else
-            -- Restore (default Roblox behavior is often 0.5-0.5 for 1st person or large for 3rd)
-            -- We'll assume the user wants to return to whatever the game default was or 1st person
+function Misc.applyThirdPerson()
+    if not Registry.isThirdPerson then 
+        -- Restore to default (1st person)
+        if Registry.LocalPlayer.CameraMaxZoomDistance ~= 0.5 then
             Registry.LocalPlayer.CameraMaxZoomDistance = 0.5
             Registry.LocalPlayer.CameraMinZoomDistance = 0.5
-            -- Note: We don't force CameraMode.LockFirstPerson back because it might annoy the user
         end
+        return 
+    end
+    
+    pcall(function()
+        -- Force Classic camera mode every frame to bypass locks
+        if Registry.LocalPlayer.CameraMode ~= Enum.CameraMode.Classic then
+            Registry.LocalPlayer.CameraMode = Enum.CameraMode.Classic
+        end
+        
+        -- Aggressive zoom limits
+        Registry.LocalPlayer.CameraMaxZoomDistance = 50
+        Registry.LocalPlayer.CameraMinZoomDistance = 5
     end)
 end
 
@@ -139,6 +136,16 @@ function Misc.applyInfiniteJump()
             humanoid:ChangeState("Jumping")
         end
     end
+end
+
+-- Spin Bot (Anti-Aim)
+function Misc.applySpinBot()
+    if not Registry.spinBotEnabled or not Registry.LocalPlayer.Character then return end
+    local root = Registry.LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
+    if not root then return end
+    
+    -- Rapid rotation around Y axis
+    root.CFrame = root.CFrame * CFrame.Angles(0, math.rad(Registry.spinBotSpeed * 10), 0)
 end
 
 return Misc

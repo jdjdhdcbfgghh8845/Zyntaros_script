@@ -265,6 +265,12 @@ function Combat.performRageBot()
             local radius = Registry.rageOrbitRadius
             local height = Registry.rageOrbitHeight
             
+            -- Chaotic Wave Variations
+            if Registry.rageWaveEnabled then
+                radius = radius + math.sin(time * Registry.rageWaveFrequency) * Registry.rageWaveAmplitude
+                height = height + math.cos(time * Registry.rageWaveFrequency * 0.7) * (Registry.rageWaveAmplitude * 0.8)
+            end
+            
             local offsetX = math.cos(time * speed) * radius
             local offsetZ = math.sin(time * speed) * radius
             

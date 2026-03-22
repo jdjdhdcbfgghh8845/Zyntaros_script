@@ -20,6 +20,9 @@ function Config.saveConfig()
         rageOrbitRadius = Registry.rageOrbitRadius,
         rageOrbitHeight = Registry.rageOrbitHeight,
         rageMaxDistance = Registry.rageMaxDistance,
+        rageWaveEnabled = Registry.rageWaveEnabled,
+        rageWaveAmplitude = Registry.rageWaveAmplitude,
+        rageWaveFrequency = Registry.rageWaveFrequency,
 
         
         -- Visuals
@@ -42,6 +45,8 @@ function Config.saveConfig()
 
         noclipEnabled = Registry.noclipEnabled,
         infJumpEnabled = Registry.infJumpEnabled,
+        spinBotEnabled = Registry.spinBotEnabled,
+        spinBotSpeed = Registry.spinBotSpeed,
         
         -- Settings
         rainbowEnabled = Registry.rainbowEnabled,
@@ -90,6 +95,9 @@ function Config.loadConfig()
         if config.rageOrbitRadius ~= nil then Registry.rageOrbitRadius = config.rageOrbitRadius end
         if config.rageOrbitHeight ~= nil then Registry.rageOrbitHeight = config.rageOrbitHeight end
         if config.rageMaxDistance ~= nil then Registry.rageMaxDistance = config.rageMaxDistance end
+        if config.rageWaveEnabled ~= nil then Registry.rageWaveEnabled = config.rageWaveEnabled end
+        if config.rageWaveAmplitude ~= nil then Registry.rageWaveAmplitude = config.rageWaveAmplitude end
+        if config.rageWaveFrequency ~= nil then Registry.rageWaveFrequency = config.rageWaveFrequency end
 
         
         if config.espEnabled ~= nil then Registry.espEnabled = config.espEnabled end
@@ -112,6 +120,8 @@ function Config.loadConfig()
 
         if config.noclipEnabled ~= nil then Registry.noclipEnabled = config.noclipEnabled end
         if config.infJumpEnabled ~= nil then Registry.infJumpEnabled = config.infJumpEnabled end
+        if config.spinBotEnabled ~= nil then Registry.spinBotEnabled = config.spinBotEnabled end
+        if config.spinBotSpeed ~= nil then Registry.spinBotSpeed = config.spinBotSpeed end
         if config.rainbowEnabled ~= nil then Registry.rainbowEnabled = config.rainbowEnabled end
         if config.autoSaveEnabled ~= nil then Registry.autoSaveEnabled = config.autoSaveEnabled end
         
@@ -163,8 +173,9 @@ function Config.loadConfig()
 
             noclipEnabled = "Noclip",
             infJumpEnabled = "Infinite Jump",
-            rainbowEnabled = "Rainbow Mode",
-            autoSaveEnabled = "Auto-Save on Exit"
+            spinBotEnabled = "Spin Bot",
+            spinBotSpeed = "Spin Speed",
+            rageWaveEnabled = "Enabled Wave Orbit"
         }
         
         -- Sync GUI Elements

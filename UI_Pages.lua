@@ -60,6 +60,11 @@ function UI_Pages.build()
     UI_Components.createSlider(rageSettings, "Orbit Radius", 1, 20, 3, function(val) Registry.rageOrbitRadius = val if Registry.autoSaveEnabled then Config.saveConfig() end end)
     UI_Components.createSlider(rageSettings, "Orbit Height", 0, 20, 5, function(val) Registry.rageOrbitHeight = val if Registry.autoSaveEnabled then Config.saveConfig() end end)
     UI_Components.createSlider(rageSettings, "Max Teleport Distance", 10, 1000, 50, function(val) Registry.rageMaxDistance = val if Registry.autoSaveEnabled then Config.saveConfig() end end)
+    
+    UI_Components.createSection(rageSettings, "Wave (Chaotic) Orbit")
+    UI_Components.createToggle(rageSettings, "Enabled Wave Orbit", false, function(state) Registry.rageWaveEnabled = state if Registry.autoSaveEnabled then Config.saveConfig() end end)
+    UI_Components.createSlider(rageSettings, "Wave Amplitude", 1, 10, 2, function(val) Registry.rageWaveAmplitude = val if Registry.autoSaveEnabled then Config.saveConfig() end end)
+    UI_Components.createSlider(rageSettings, "Wave Frequency", 1, 10, 2, function(val) Registry.rageWaveFrequency = val if Registry.autoSaveEnabled then Config.saveConfig() end end)
 
     local triggerSettings, triggerIcon = UI_Components.createFeatureTile(AimbotPage, "Trigger Bot", false, function(state)
         Registry.triggerBotEnabled = state
@@ -149,12 +154,19 @@ function UI_Pages.build()
     UI_Components.createSlider(flySettings, "Fly Speed", 10, 200, 50, function(val) Registry.flySpeed = val if Registry.autoSaveEnabled then Config.saveConfig() end end)
 
     local tpSettings, tpIcon = UI_Components.createFeatureTile(MiscPage, "Third Person View", false, function(state)
-        Registry.isThirdPerson = state
-        if Registry.autoSaveEnabled then Config.saveConfig() end
-        Misc.updateThirdPerson()
+         Registry.isThirdPerson = state
+         if Registry.autoSaveEnabled then Config.saveConfig() end
+         Misc.applyThirdPerson()
     end)
     tpIcon.Text = "🧍"
     UI_Components.createKeybind(tpSettings, "Third Person View", Registry.Keybinds["Third Person View"], function(key) Registry.Keybinds["Third Person View"] = key if Registry.autoSaveEnabled then Config.saveConfig() end end)
+
+    local spinSettings, spinIcon = UI_Components.createFeatureTile(MiscPage, "Spin Bot", false, function(state)
+        Registry.spinBotEnabled = state
+        if Registry.autoSaveEnabled then Config.saveConfig() end
+    end)
+    spinIcon.Text = "🌀"
+    UI_Components.createSlider(spinSettings, "Spin Speed", 1, 100, 15, function(val) Registry.spinBotSpeed = val if Registry.autoSaveEnabled then Config.saveConfig() end end)
 
 
     local camSettings, camIcon = UI_Components.createFeatureTile(MiscPage, "Camera/FOV", false, function(state)
