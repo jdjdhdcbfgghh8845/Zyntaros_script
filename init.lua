@@ -60,10 +60,25 @@ if not isLocal then
 end
 
 -- [[ MODULE LOADER ]]
-local function safeRequire(path)
+local function createVirtualScript(path)
+    local vs = { __path = path, Name = path:match("([^/]+)$") or "Script" }
+    setmetatable(vs, {
+        __index = function(t, k)
+            if k == "Parent" then
+                local parentPath = path:match("(.+)/[^/]+$") or ""
+                return createVirtualScript(parentPath)
+            end
+            return createVirtualScript(path .. (path == "" and "" or "/") .. k)
+        end
+    })
+    return vs
+end
+
+local function safeRequire(input)
     if isLocal then
         -- Standard Roblox require for local ModuleScripts
-        local segments = path:split(".")
+        if typeof(input) ~= "string" then return require(input) end
+        local segments = input:split(".")
         local current = script
         for _, s in ipairs(segments) do 
             current = current:FindFirstChild(s) 
@@ -72,11 +87,29 @@ local function safeRequire(path)
         return require(current)
     else
         -- Executor loadfile for workspace files
-        local localPath = FOLDER_NAME .. "/" .. path:gsub("%.", "/") .. ".lua"
+        local path = ""
+        if typeof(input) == "string" then
+            path = input:gsub("%.", "/") .. ".lua"
+        elseif typeof(input) == "table" and input.__path then
+            path = input.__path .. ".lua"
+        end
+        
+        local localPath = FOLDER_NAME .. "/" .. path
         if isfile(localPath) then
+            if CACHE[path] then return CACHE[path] end
             local source = readfile(localPath)
             local func, err = loadstring(source)
-            if func then return func() else error("[ACC] ❌ Failed to load " .. path .. ": " .. err) end
+            if not func then error("[ACC] ❌ Syntax Error in " .. path .. ": " .. err) end
+            
+            -- Inject Environment
+            local modEnv = getfenv(func)
+            modEnv.script = createVirtualScript(path:gsub("%.lua$", ""))
+            modEnv.require = safeRequire
+            setfenv(func, modEnv)
+            
+            local result = func()
+            CACHE[path] = result
+            return result
         else
             error("[ACC] ❌ Module not found in workspace: " .. localPath)
         end
