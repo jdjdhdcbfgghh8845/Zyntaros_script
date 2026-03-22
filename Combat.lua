@@ -111,7 +111,6 @@ function Combat.moveMouse(targetPos)
             mousemoverel(moveX, moveY)
         else
             -- Fallback to InputService if mousemoverel is missing
-            -- This is less effective for bypassing resets but better than nothing
             pcall(function()
                 local InputService = game:GetService("VirtualInputManager")
                 if InputService then
@@ -287,6 +286,9 @@ function Combat.performRageBot()
             if not Registry.lastRageShot then Registry.lastRageShot = 0 end
             local currentTime = tick()
             
+            if currentTime - Registry.lastRageShot >= 0.05 then
+                Registry.lastRageShot = currentTime
+                
                 -- Primary shot
                 local success = pcall(function() mouse1click() end)
                 
@@ -396,10 +398,6 @@ function Combat.autoClick()
                     
                     if success then
                         Registry.lastTriggerShot = currentTime
-                        -- Optional: Debug output for high-priority targets
-                        if priority >= 10 then
-                            print("[TRIGGER BOT] 🎯 Headshot on " .. targetPlayer.Name)
-                        end
                     else
                         -- Fallback method - also instant
                         pcall(function()
