@@ -92,8 +92,9 @@ function UI_Pages.build()
     UI_Components.createSection(effectSettings, "World Effects")
     UI_Components.createToggle(effectSettings, "Chams", false, function(state) _G.chamsEnabled = state end)
     UI_Components.createToggle(effectSettings, "Tracers", false, function(state) _G.tracersEnabled = state end)
-    UI_Components.createToggle(effectSettings, "Crosshair", false, function(state) _G.crosshairEnabled = state end)
     UI_Components.createToggle(effectSettings, "Enemy Glow", false, function(state) _G.glowEnabled = state end)
+    UI_Components.createToggle(effectSettings, "Bullet Tracers", false, function(state) Registry.bulletTracersEnabled = state end)
+    UI_Components.createSlider(effectSettings, "Tracer Duration", 0.1, 2.0, 0.5, function(val) Registry.bulletTracerDuration = val end)
 
     local worldSettings, worldIcon = UI_Components.createFeatureTile(VisualsPage, "World Themes", true, function(state)
         Registry.worldVisualsEnabled = state
@@ -126,14 +127,18 @@ function UI_Pages.build()
     end)
     noclipIcon.Text = "👻"
 
-    local shrinkSettings, shrinkIcon = UI_Components.createFeatureTile(MiscPage, "Hitbox Shrinker", false, function(state)
-        Registry.shrinkEnabled = state
-        Misc.applyShrink()
+    local flySettings, flyIcon = UI_Components.createFeatureTile(MiscPage, "Fly Hack", false, function(state)
+        Registry.flyEnabled = state
+        Misc.updateFly()
     end)
-    shrinkIcon.Text = "📦"
-    UI_Components.createSection(shrinkSettings, "Compression")
-    UI_Components.createSlider(shrinkSettings, "Shrink Size", 0.1, 1.0, 0.2, function(val) Registry.shrinkScale = val end)
+    flyIcon.Text = "🕊️"
+    UI_Components.createSlider(flySettings, "Fly Speed", 10, 200, 50, function(val) Registry.flySpeed = val end)
 
+    local tpSettings, tpIcon = UI_Components.createFeatureTile(MiscPage, "Third Person View", false, function(state)
+        Registry.isThirdPerson = state
+        Misc.updateThirdPerson()
+    end)
+    tpIcon.Text = "🧍"
 
 
     local camSettings, camIcon = UI_Components.createFeatureTile(MiscPage, "Camera/FOV", false, function(state)

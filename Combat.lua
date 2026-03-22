@@ -287,9 +287,6 @@ function Combat.performRageBot()
             if not Registry.lastRageShot then Registry.lastRageShot = 0 end
             local currentTime = tick()
             
-            if currentTime - Registry.lastRageShot >= 0.05 then
-                Registry.lastRageShot = currentTime
-                
                 -- Primary shot
                 local success = pcall(function() mouse1click() end)
                 
@@ -300,6 +297,12 @@ function Combat.performRageBot()
                         task.wait(0.01)
                         mouse1release()
                     end)
+                end
+
+                -- Bullet Tracer from Camera to Target Head
+                local Effects = getgenv().MyHubState.Effects
+                if Effects and Effects.createBulletTracer then
+                    Effects.createBulletTracer(Registry.Camera.CFrame.Position, targetHead.Position)
                 end
             end
         end
@@ -403,6 +406,15 @@ function Combat.autoClick()
                             mouse1click()
                             Registry.lastTriggerShot = currentTime
                         end)
+                    end
+
+                    -- Tracer for Trigger Bot
+                    local Effects = getgenv().MyHubState.Effects
+                    if Effects and Effects.createBulletTracer then
+                        local camera = Registry.Camera
+                        local startPos = camera.CFrame.Position
+                        local endPos = Registry.mouse.Hit.Position
+                        Effects.createBulletTracer(startPos, endPos)
                     end
                 end
             end

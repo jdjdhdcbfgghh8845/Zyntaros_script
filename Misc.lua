@@ -29,6 +29,85 @@ function Misc.applySpeedHack()
 end
 
 --[[
+    FLY HACK
+--]]
+local flyVelocity = nil
+local flyGyro = nil
+
+function Misc.updateFly()
+    if not Registry.LocalPlayer.Character then return end
+    local root = Registry.LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
+    if not root then return end
+    
+    if Registry.flyEnabled then
+        -- Create physics objects if they don't exist
+        if not flyVelocity or flyVelocity.Parent ~= root then
+            flyVelocity = Instance.new("BodyVelocity")
+            flyVelocity.MaxForce = Vector3.new(1, 1, 1) * 10^6
+            flyVelocity.Velocity = Vector3.new(0, 0, 0)
+            flyVelocity.Parent = root
+            
+            flyGyro = Instance.new("BodyGyro")
+            flyGyro.MaxTorque = Vector3.new(1, 1, 1) * 10^6
+            flyGyro.D = 100
+            flyGyro.P = 10000
+            flyGyro.CFrame = root.CFrame
+            flyGyro.Parent = root
+        end
+        
+        -- Calculate movement direction based on Camera and Input
+        local moveDir = Vector3.new(0, 0, 0)
+        local camCF = Registry.Camera.CFrame
+        
+        if Registry.UserInputService:IsKeyDown(Enum.KeyCode.W) then moveDir = moveDir + camCF.LookVector end
+        if Registry.UserInputService:IsKeyDown(Enum.KeyCode.S) then moveDir = moveDir - camCF.LookVector end
+        if Registry.UserInputService:IsKeyDown(Enum.KeyCode.A) then moveDir = moveDir - camCF.RightVector end
+        if Registry.UserInputService:IsKeyDown(Enum.KeyCode.D) then moveDir = moveDir + camCF.RightVector end
+        if Registry.UserInputService:IsKeyDown(Enum.KeyCode.Space) then moveDir = moveDir + Vector3.new(0, 1, 0) end
+        if Registry.UserInputService:IsKeyDown(Enum.KeyCode.LeftShift) then moveDir = moveDir - Vector3.new(0, 1, 0) end
+        
+        flyVelocity.Velocity = moveDir * Registry.flySpeed
+        flyGyro.CFrame = camCF
+        
+        -- Animation fix (stop falling animation)
+        local humanoid = Registry.LocalPlayer.Character:FindFirstChild("Humanoid")
+        if humanoid then
+            humanoid:ChangeState(Enum.HumanoidStateType.Flying)
+        end
+    else
+        -- Clean up physics objects
+        if flyVelocity then flyVelocity:Destroy() flyVelocity = nil end
+        if flyGyro then flyGyro:Destroy() flyGyro = nil end
+    end
+end
+
+--[[
+    THIRD PERSON VIEW
+--]]
+function Misc.updateThirdPerson()
+    pcall(function()
+        if Registry.isThirdPerson then
+            Registry.LocalPlayer.CameraMaxZoomDistance = 50
+            Registry.LocalPlayer.CameraMinZoomDistance = 10
+            -- Force zoom out slightly if current distance is too small
+        else
+            Registry.LocalPlayer.CameraMaxZoomDistance = 0.5
+            Registry.LocalPlayer.CameraMinZoomDistance = 0.5
+        end
+    end)
+end
+
+function Misc.toggleThirdPerson()
+    Registry.isThirdPerson = not Registry.isThirdPerson
+    Misc.updateThirdPerson()
+    print("[CAMERA] 🎥 Third Person: " .. (Registry.isThirdPerson and "ON" or "OFF"))
+    
+    -- Sync UI
+    local updateFunc = _G.ConfigRegistry["Third Person View"]
+    if updateFunc then updateFunc(Registry.isThirdPerson) end
+end
+
+--[[
     NOCLIP & INFINITE JUMP
 --]]
 function Misc.applyNoclip()
@@ -50,61 +129,6 @@ function Misc.applyInfiniteJump()
     end
 end
 
---[[
-    HITBOX SHRINKER
---]]
-function Misc.applyShrink()
-    local char = Registry.LocalPlayer.Character
-    if not char then return end
-    local humanoid = char:FindFirstChildOfClass("Humanoid")
-    if not humanoid then return end
-    
-    if Registry.shrinkEnabled then
-        -- R15 Scaling (Standard method)
-        local foundScale = false
-        local scales = {"BodyDepthScale", "BodyHeightScale", "BodyWidthScale", "HeadScale", "BodyProportionScale"}
-        for _, scaleName in ipairs(scales) do
-            local v = humanoid:FindFirstChild(scaleName)
-            if v and v:IsA("NumberValue") then
-                v.Value = Registry.shrinkScale
-                foundScale = true
-            end
-        end
-        
-        -- R6 Logic / Direct Part Scaling (Fallback/Brute Force)
-        -- We iterate through parts and shrink them if they aren't the Root
-        for _, part in pairs(char:GetChildren()) do
-            if part:IsA("BasePart") and part.Name ~= "HumanoidRootPart" then
-                pcall(function()
-                    -- REPLICATION HACK: Stacking parts at the Root makes the hitbox shrink on the server
-                    part.CFrame = char.HumanoidRootPart.CFrame
-                    
-                    -- Force shrink Size
-                    part.Size = Vector3.new(Registry.shrinkScale, Registry.shrinkScale, Registry.shrinkScale)
-                    
-                    -- Physics stability to prevent flinging
-                    part.CanCollide = false 
-                    part.CanTouch = false
-                    part.CanQuery = false
-                    part.Massless = true
-                    
-                    -- Zero out velocities for this part
-                    part.AssemblyLinearVelocity = Vector3.new(0,0,0)
-                    part.AssemblyAngularVelocity = Vector3.new(0,0,0)
-                end)
-            end
-        end
-    else
-        -- Restore R15 Scales
-        local scales = {"BodyDepthScale", "BodyHeightScale", "BodyWidthScale", "HeadScale", "BodyProportionScale"}
-        for _, scaleName in ipairs(scales) do
-            local v = humanoid:FindFirstChild(scaleName)
-            if v and v:IsA("NumberValue") then
-                v.Value = 1
-            end
-        end
-        -- We don't easily restore R6 sizes without storing them, 
-        -- but usually a character reset or turning off/on works.
     end
 end
 

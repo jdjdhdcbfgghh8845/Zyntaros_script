@@ -270,4 +270,44 @@ function Effects.removeGlow(player)
     end
 end
 
+--[[
+    BULLET TRACERS
+    Рисует линию от игрока до цели при выстреле
+--]]
+
+function Effects.createBulletTracer(from, to)
+    if not Registry.bulletTracersEnabled then return end
+    
+    local distance = (from - to).Magnitude
+    if distance > 1000 then return end -- Skip extreme distances
+    
+    local p = Instance.new("Part")
+    p.Name = "BulletTracer"
+    p.Anchored = true
+    p.CanCollide = false
+    p.CanTouch = false
+    p.CanQuery = false
+    p.Size = Vector3.new(0.05, 0.05, distance)
+    p.CFrame = CFrame.new(from:Lerp(to, 0.5), to)
+    p.Color = Registry.bulletTracerColor or Color3.fromRGB(255, 0, 0)
+    p.Material = Enum.Material.Neon
+    p.Transparency = 0.4
+    p.Parent = workspace:FindFirstChildOfClass("Camera") or workspace
+    
+    -- Animate fading and removal
+    task.spawn(function()
+        local duration = Registry.bulletTracerDuration or 0.5
+        local start = tick()
+        while tick() - start < duration do
+            local elapsed = tick() - start
+            local percent = elapsed / duration
+            p.Transparency = 0.4 + (0.6 * percent)
+            -- Optionally shrink the tracer
+            -- p.Size = Vector3.new(0.05 * (1 - percent), 0.05 * (1 - percent), distance)
+            task.wait()
+        end
+        p:Destroy()
+    end)
+end
+
 return Effects

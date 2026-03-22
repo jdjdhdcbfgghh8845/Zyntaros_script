@@ -158,11 +158,18 @@ Registry.speedHackEnabled = false
 Registry.speedMultiplier = 2 -- Default speed multiplier (1-10)
 Registry.originalWalkSpeed = 16 -- Default Roblox walk speed
 
+-- Visuals / Effects variables
+Registry.bulletTracersEnabled = false
+Registry.bulletTracerColor = Color3.fromRGB(255, 0, 0)
+Registry.bulletTracerDuration = 0.5
+
 -- Misc variables
 Registry.noclipEnabled = false
 Registry.infJumpEnabled = false
-Registry.shrinkEnabled = false
-Registry.shrinkScale = 0.2 -- Default shrink size
+Registry.flyEnabled = false
+Registry.flySpeed = 50
+Registry.isThirdPerson = false
+Registry.thirdPersonKey = Enum.KeyCode.C -- Default keybind for 3rd person toggle
 
 -- Whitelist variables
 Registry.whitelist = {} -- Table of whitelisted player names

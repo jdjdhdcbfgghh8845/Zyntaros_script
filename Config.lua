@@ -29,11 +29,15 @@ function Config.saveConfig()
         tracersEnabled = _G.tracersEnabled,
         crosshairEnabled = _G.crosshairEnabled,
         glowEnabled = _G.glowEnabled,
+        bulletTracersEnabled = Registry.bulletTracersEnabled,
+        bulletTracerColor = {Registry.bulletTracerColor.R, Registry.bulletTracerColor.G, Registry.bulletTracerColor.B},
+        bulletTracerDuration = Registry.bulletTracerDuration,
         
         -- Misc
         speedMultiplier = Registry.speedMultiplier,
-        shrinkEnabled = Registry.shrinkEnabled,
-        shrinkScale = Registry.shrinkScale,
+        flyEnabled = Registry.flyEnabled,
+        flySpeed = Registry.flySpeed,
+        isThirdPerson = Registry.isThirdPerson,
 
         noclipEnabled = Registry.noclipEnabled,
         infJumpEnabled = Registry.infJumpEnabled,
@@ -86,10 +90,16 @@ function Config.loadConfig()
         if config.tracersEnabled ~= nil then _G.tracersEnabled = config.tracersEnabled end
         if config.crosshairEnabled ~= nil then _G.crosshairEnabled = config.crosshairEnabled end
         if config.glowEnabled ~= nil then _G.glowEnabled = config.glowEnabled end
+        if config.bulletTracersEnabled ~= nil then Registry.bulletTracersEnabled = config.bulletTracersEnabled end
+        if config.bulletTracerDuration ~= nil then Registry.bulletTracerDuration = config.bulletTracerDuration end
+        if config.bulletTracerColor ~= nil then 
+            Registry.bulletTracerColor = Color3.new(config.bulletTracerColor[1], config.bulletTracerColor[2], config.bulletTracerColor[3]) 
+        end
         
         if config.speedMultiplier ~= nil then Registry.speedMultiplier = config.speedMultiplier end
-        if config.shrinkEnabled ~= nil then Registry.shrinkEnabled = config.shrinkEnabled end
-        if config.shrinkScale ~= nil then Registry.shrinkScale = config.shrinkScale end
+        if config.flyEnabled ~= nil then Registry.flyEnabled = config.flyEnabled end
+        if config.flySpeed ~= nil then Registry.flySpeed = config.flySpeed end
+        if config.isThirdPerson ~= nil then Registry.isThirdPerson = config.isThirdPerson end
 
         if config.noclipEnabled ~= nil then Registry.noclipEnabled = config.noclipEnabled end
         if config.infJumpEnabled ~= nil then Registry.infJumpEnabled = config.infJumpEnabled end
@@ -118,12 +128,15 @@ function Config.loadConfig()
             skeletonEnabled = "Skeleton ESP",
             chamsEnabled = "Chams",
             tracersEnabled = "Tracers",
-            crosshairEnabled = "Crosshair",
+            crosshairEnabled = "Custom Crosshair",
             glowEnabled = "Enemy Glow",
+            bulletTracersEnabled = "Bullet Tracers",
+            bulletTracerDuration = "Tracer Duration",
             
             speedMultiplier = "Speed Multiplier",
-            shrinkEnabled = "Hitbox Shrinker",
-            shrinkScale = "Shrink Size",
+            flyEnabled = "Fly Hack",
+            flySpeed = "Fly Speed",
+            isThirdPerson = "Third Person View",
 
             noclipEnabled = "Noclip",
             infJumpEnabled = "Infinite Jump",
