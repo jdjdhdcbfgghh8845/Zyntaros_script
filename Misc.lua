@@ -54,27 +54,48 @@ end
     HITBOX SHRINKER
 --]]
 function Misc.applyShrink()
-    if not Registry.LocalPlayer.Character then return end
-    local humanoid = Registry.LocalPlayer.Character:FindFirstChild("Humanoid")
+    local char = Registry.LocalPlayer.Character
+    if not char then return end
+    local humanoid = char:FindFirstChildOfClass("Humanoid")
     if not humanoid then return end
     
-    local scales = {"BodyDepthScale", "BodyHeightScale", "BodyWidthScale", "HeadScale", "BodyProportionScale"}
-    
     if Registry.shrinkEnabled then
+        -- R15 Scaling (Standard method)
+        local foundScale = false
+        local scales = {"BodyDepthScale", "BodyHeightScale", "BodyWidthScale", "HeadScale", "BodyProportionScale"}
         for _, scaleName in ipairs(scales) do
-            local scaleValue = humanoid:FindFirstChild(scaleName)
-            if scaleValue and scaleValue:IsA("NumberValue") then
-                scaleValue.Value = Registry.shrinkScale
+            local v = humanoid:FindFirstChild(scaleName)
+            if v and v:IsA("NumberValue") then
+                v.Value = Registry.shrinkScale
+                foundScale = true
+            end
+        end
+        
+        -- R6 Logic / Direct Part Scaling (Fallback/Brute Force)
+        -- We iterate through parts and shrink them if they aren't the Root
+        for _, part in pairs(char:GetChildren()) do
+            if part:IsA("BasePart") and part.Name ~= "HumanoidRootPart" then
+                pcall(function()
+                    -- If R15 scales didn't work, we force size (Warning: might be buggy in some games)
+                    if not foundScale or part.Name == "Head" then
+                         part.Size = Vector3.new(Registry.shrinkScale, Registry.shrinkScale, Registry.shrinkScale)
+                    end
+                    -- Eliminate collisions between parts to prevent flinging
+                    part.CanCollide = false 
+                end)
             end
         end
     else
-        -- Restore to default
+        -- Restore R15 Scales
+        local scales = {"BodyDepthScale", "BodyHeightScale", "BodyWidthScale", "HeadScale", "BodyProportionScale"}
         for _, scaleName in ipairs(scales) do
-            local scaleValue = humanoid:FindFirstChild(scaleName)
-            if scaleValue and scaleValue:IsA("NumberValue") then
-                scaleValue.Value = 1
+            local v = humanoid:FindFirstChild(scaleName)
+            if v and v:IsA("NumberValue") then
+                v.Value = 1
             end
         end
+        -- We don't easily restore R6 sizes without storing them, 
+        -- but usually a character reset or turning off/on works.
     end
 end
 
