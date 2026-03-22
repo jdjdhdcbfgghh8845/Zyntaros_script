@@ -46,10 +46,14 @@ local function install()
     print("[ACC] ✅ All modules synced!")
 end
 
--- Detect if we are running from a local file or cloud
--- If 'script' is a ModuleScript (Local), we use require
--- If 'script' is nil or not in ACC folder (Cloud), we use loadfile from workspace
-local isLocal = (typeof(script) == "Instance" and script:IsDescendantOf(game:GetService("CoreGui")))
+-- Detect if we are running from a local file structure (Studio or local ModuleScripts)
+-- We check if the 'core' folder actually exists as a child of this script
+local isLocal = false
+pcall(function()
+    if typeof(script) == "Instance" and script:FindFirstChild("core") then
+        isLocal = true
+    end
+end)
 
 if not isLocal then
     install()
@@ -58,18 +62,23 @@ end
 -- [[ MODULE LOADER ]]
 local function safeRequire(path)
     if isLocal then
-        -- Standard Roblox require
+        -- Standard Roblox require for local ModuleScripts
         local segments = path:split(".")
         local current = script
-        for _, s in ipairs(segments) do current = current[s] end
+        for _, s in ipairs(segments) do 
+            current = current:FindFirstChild(s) 
+            if not current then error("[ACC] ❌ Local module missing: " .. s) end
+        end
         return require(current)
     else
-        -- Executor loadfile
+        -- Executor loadfile for workspace files
         local localPath = FOLDER_NAME .. "/" .. path:gsub("%.", "/") .. ".lua"
         if isfile(localPath) then
-            return loadstring(readfile(localPath))()
+            local source = readfile(localPath)
+            local func, err = loadstring(source)
+            if func then return func() else error("[ACC] ❌ Failed to load " .. path .. ": " .. err) end
         else
-            error("[ACC] ❌ Module not found locally: " .. localPath)
+            error("[ACC] ❌ Module not found in workspace: " .. localPath)
         end
     end
 end
