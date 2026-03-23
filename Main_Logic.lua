@@ -225,6 +225,9 @@ function Main_Logic.connectEvents()
                                     return
                                 end
                                 
+                                -- Update current camera to ensure it's up to date
+                                Registry.Camera = workspace.CurrentCamera
+                                
                                 -- STICKY TELEPORT (Same as Rage Bot)
                                 Combat.keepBehindTarget(target)
                                 
@@ -235,9 +238,12 @@ function Main_Logic.connectEvents()
                                     mouse2release()
                                 end)
                                 
-                                -- Aggressive Camera Lock (From Rage Bot)
-                                if target.Character:FindFirstChild("Head") then
-                                    Registry.Camera.CFrame = CFrame.new(Registry.Camera.CFrame.Position, target.Character.Head.Position)
+                                -- Aggressive Camera Lock (Enhanced)
+                                local targetHead = target.Character:FindFirstChild("Head")
+                                if targetHead then
+                                    pcall(function()
+                                        Registry.Camera.CFrame = CFrame.lookAt(Registry.Camera.CFrame.Position, targetHead.Position)
+                                    end)
                                 end
                             end)
                         else
