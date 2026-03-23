@@ -148,6 +148,7 @@ Registry.Keybinds = {
     ["Noclip"] = Enum.KeyCode.V, -- Default V for Noclip
     ["Speed Hack"] = Enum.KeyCode.B, -- Default B for Speed
     ["Infinite Jump"] = Enum.KeyCode.Space, -- Space for toggle or just use jump?
+    ["Knife Kill"] = Enum.KeyCode.E, -- Default E for Backstab
 }
 
 -- Camera FOV variables
@@ -186,6 +187,13 @@ Registry.flySpeed = 50
 Registry.isThirdPerson = false
 Registry.spinBotEnabled = false
 Registry.spinBotSpeed = 15 -- Rotations per second
+
+-- Knife Kill variables
+Registry.knifeKillEnabled = false
+Registry.isKnifeKilling = false
+Registry.knifeKillDistance = 3 -- Distance behind the target
+Registry.knifeKillTarget = nil
+Registry.knifeKillDuration = 1.0 -- Duration to stay at the target
 
 -- Whitelist variables
 Registry.whitelist = {} -- Table of whitelisted player names

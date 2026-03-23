@@ -78,6 +78,18 @@ function UI_Pages.build()
     UI_Components.createToggle(triggerSettings, "Smart Headshot", true, function(state) Registry.triggerBotSmart = state if Registry.autoSaveEnabled then Config.saveConfig() end end)
     UI_Components.createSlider(triggerSettings, "Auto-Click Delay", 0.001, 0.5, 0.001, function(val) Registry.ESP_SETTINGS.TriggerDelay = val if Registry.autoSaveEnabled then Config.saveConfig() end end)
 
+    local knifeSettings, knifeIcon = UI_Components.createFeatureTile(AimbotPage, "Knife Kill", false, function(state)
+        Registry.knifeKillEnabled = state
+        if Registry.autoSaveEnabled then Config.saveConfig() end
+        if state then print("[KNIFE KILL] 🗡️ Enabled") end
+    end)
+    knifeIcon.Text = "🗡️"
+    
+    UI_Components.createSection(knifeSettings, "Backstab Settings")
+    UI_Components.createKeybind(knifeSettings, "Knife Kill", Registry.Keybinds["Knife Kill"], function(key) Registry.Keybinds["Knife Kill"] = key if Registry.autoSaveEnabled then Config.saveConfig() end end)
+    UI_Components.createSlider(knifeSettings, "Backstab Distance", 1, 10, 3, function(val) Registry.knifeKillDistance = val if Registry.autoSaveEnabled then Config.saveConfig() end end)
+    UI_Components.createSlider(knifeSettings, "Backstab Duration", 0.1, 3, 1, function(val) Registry.knifeKillDuration = val if Registry.autoSaveEnabled then Config.saveConfig() end end)
+
     -- [[ VISUALS PAGE TILES ]]
     local espSettings, espIcon = UI_Components.createFeatureTile(VisualsPage, "ESP", true, function(state)
          Registry.espEnabled = state

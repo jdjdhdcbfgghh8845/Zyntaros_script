@@ -23,6 +23,9 @@ function Config.saveConfig()
         rageWaveEnabled = Registry.rageWaveEnabled,
         rageWaveAmplitude = Registry.rageWaveAmplitude,
         rageWaveFrequency = Registry.rageWaveFrequency,
+        knifeKillEnabled = Registry.knifeKillEnabled,
+        knifeKillDistance = Registry.knifeKillDistance,
+        knifeKillDuration = Registry.knifeKillDuration,
 
         
         -- Visuals
@@ -99,6 +102,10 @@ function Config.loadConfig()
         if config.rageWaveEnabled ~= nil then Registry.rageWaveEnabled = config.rageWaveEnabled end
         if config.rageWaveAmplitude ~= nil then Registry.rageWaveAmplitude = config.rageWaveAmplitude end
         if config.rageWaveFrequency ~= nil then Registry.rageWaveFrequency = config.rageWaveFrequency end
+
+        if config.knifeKillEnabled ~= nil then Registry.knifeKillEnabled = config.knifeKillEnabled end
+        if config.knifeKillDistance ~= nil then Registry.knifeKillDistance = config.knifeKillDistance end
+        if config.knifeKillDuration ~= nil then Registry.knifeKillDuration = config.knifeKillDuration end
 
         
         if config.espEnabled ~= nil then Registry.espEnabled = config.espEnabled end
@@ -182,9 +189,11 @@ function Config.loadConfig()
 
             noclipEnabled = "Noclip",
             infJumpEnabled = "Infinite Jump",
-            spinBotEnabled = "Spin Bot",
             spinBotSpeed = "Spin Speed",
             rageWaveEnabled = "Enabled Wave Orbit",
+            knifeKillEnabled = "Knife Kill",
+            knifeKillDistance = "Backstab Distance",
+            knifeKillDuration = "Backstab Duration",
             streamproofEnabled = "Streamproof Mode"
         }
         

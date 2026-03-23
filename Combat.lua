@@ -426,4 +426,71 @@ function Combat.autoClick()
     end
 end
 
+--[[
+    KNIFE KILL / BACKSTAB
+    Teleports behind target, switches to knife, and attacks
+--]]
+
+function Combat.getClosestBackstabTarget()
+    local closestPlayer = nil
+    local shortestDistance = 100 -- Limit for backstab
+    
+    local localCharacter = Registry.LocalPlayer.Character
+    if not localCharacter or not localCharacter:FindFirstChild("HumanoidRootPart") then return nil end
+    local localPos = localCharacter.HumanoidRootPart.Position
+    
+    for _, player in pairs(Registry.Players:GetPlayers()) do
+        if player ~= Registry.LocalPlayer and player.Character then
+            if not Utils.isTeammate(player) and not Utils.isWhitelisted(player) then
+                local character = player.Character
+                local humanoid = character:FindFirstChild("Humanoid")
+                
+                if humanoid and humanoid.Health > 0 then
+                    local targetRoot = character:FindFirstChild("HumanoidRootPart")
+                    if targetRoot then
+                        local distance = (localPos - targetRoot.Position).Magnitude
+                        if distance < shortestDistance then
+                            closestPlayer = player
+                            shortestDistance = distance
+                        end
+                    end
+                end
+            end
+        end
+    end
+    
+    return closestPlayer
+end
+
+function Combat.performBackstab(targetPlayer)
+    if not targetPlayer or not targetPlayer.Character then return end
+    
+    local targetRoot = targetPlayer.Character:FindFirstChild("HumanoidRootPart")
+    local localCharacter = Registry.LocalPlayer.Character
+    if not targetRoot or not localCharacter or not localCharacter:FindFirstChild("HumanoidRootPart") then return end
+    
+    local localRoot = localCharacter.HumanoidRootPart
+    
+    -- Calculate position behind target
+    local behindPos = targetRoot.Position - (targetRoot.CFrame.LookVector * Registry.knifeKillDistance)
+    
+    -- 1. Teleport behind
+    localRoot.CFrame = CFrame.new(behindPos, targetRoot.Position)
+    
+    -- 2. Switch to Knife (Key 3)
+    pcall(function()
+        game:GetService("VirtualInputManager"):SendKeyEvent(true, Enum.KeyCode.Three, false, game)
+        task.wait(0.05)
+        game:GetService("VirtualInputManager"):SendKeyEvent(false, Enum.KeyCode.Three, false, game)
+    end)
+    
+    -- 3. Attack (Right Click - heavy attack)
+    task.wait(0.1)
+    pcall(function()
+        mouse2press()
+        task.wait(0.05)
+        mouse2release()
+    end)
+end
+
 return Combat

@@ -192,6 +192,34 @@ function Main_Logic.connectEvents()
                     local update = _G.ConfigRegistry["Infinite Jump"]
                     if update then update(Registry.infJumpEnabled) end
                     print("[INF JUMP] Toggled: " .. tostring(Registry.infJumpEnabled))
+                
+                elseif featureName == "Knife Kill" and Registry.knifeKillEnabled and not Registry.isKnifeKilling then
+                    task.spawn(function()
+                        local char = Registry.LocalPlayer.Character
+                        local root = char and char:FindFirstChild("HumanoidRootPart")
+                        if not root then return end
+                        
+                        local target = Combat.getClosestBackstabTarget()
+                        if target then
+                            Registry.isKnifeKilling = true
+                            local originalCF = root.CFrame
+                            
+                            print("[KNIFE KILL] Started on: " .. target.Name)
+                            
+                            -- Perform maneuver
+                            Combat.performBackstab(target)
+                            
+                            -- Wait for the specified duration (default 1s)
+                            task.wait(Registry.knifeKillDuration)
+                            
+                            -- Return to original position
+                            root.CFrame = originalCF
+                            Registry.isKnifeKilling = false
+                            print("[KNIFE KILL] Finished and returned.")
+                        else
+                            print("[KNIFE KILL] No target found.")
+                        end
+                    end)
                 end
                 
                 -- Auto-Save on keybind toggle
