@@ -199,25 +199,49 @@ function Main_Logic.connectEvents()
                         local root = char and char:FindFirstChild("HumanoidRootPart")
                         if not root then return end
                         
+                        -- Find initial target
                         local target = Combat.getClosestBackstabTarget()
                         if target then
                             Registry.isKnifeKilling = true
                             local originalCF = root.CFrame
+                            print("[KNIFE KILL] 🗡️ Sequence Started on: " .. target.Name)
                             
-                            print("[KNIFE KILL] Started on: " .. target.Name)
-                            
-                            -- Perform maneuver
+                            -- Switch to Knife (Slot 3)
                             Combat.performBackstab(target)
                             
-                            -- Wait for the specified duration (default 1s)
-                            task.wait(Registry.knifeKillDuration)
+                            local startTime = tick()
+                            local connection
                             
-                            -- Return to original position
-                            root.CFrame = originalCF
-                            Registry.isKnifeKilling = false
-                            print("[KNIFE KILL] Finished and returned.")
+                            connection = Registry.RunService.RenderStepped:Connect(function()
+                                local now = tick()
+                                local duration = Registry.knifeKillDuration
+                                
+                                -- Check if time is up or target is lost
+                                if now - startTime >= duration or not target.Character or not target.Character:FindFirstChild("HumanoidRootPart") or not Registry.isKnifeKilling then
+                                    connection:Disconnect()
+                                    root.CFrame = originalCF
+                                    Registry.isKnifeKilling = false
+                                    print("[KNIFE KILL] 🏁 Sequence Finished.")
+                                    return
+                                end
+                                
+                                -- STICKY TELEPORT (Same as Rage Bot)
+                                Combat.keepBehindTarget(target)
+                                
+                                -- AGGRESSIVE ATTACK
+                                pcall(function()
+                                    mouse2press()
+                                    task.wait(0.01)
+                                    mouse2release()
+                                end)
+                                
+                                -- Aggressive Camera Lock (From Rage Bot)
+                                if target.Character:FindFirstChild("Head") then
+                                    Registry.Camera.CFrame = CFrame.new(Registry.Camera.CFrame.Position, target.Character.Head.Position)
+                                end
+                            end)
                         else
-                            print("[KNIFE KILL] No target found.")
+                            print("[KNIFE KILL] ❌ No target in range.")
                         end
                     end)
                 end

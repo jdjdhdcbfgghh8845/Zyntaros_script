@@ -462,7 +462,7 @@ function Combat.getClosestBackstabTarget()
     return closestPlayer
 end
 
-function Combat.performBackstab(targetPlayer)
+function Combat.keepBehindTarget(targetPlayer)
     if not targetPlayer or not targetPlayer.Character then return end
     
     local targetRoot = targetPlayer.Character:FindFirstChild("HumanoidRootPart")
@@ -474,23 +474,21 @@ function Combat.performBackstab(targetPlayer)
     -- Calculate position behind target
     local behindPos = targetRoot.Position - (targetRoot.CFrame.LookVector * Registry.knifeKillDistance)
     
-    -- 1. Teleport behind
+    -- Teleport behind and look at target
     localRoot.CFrame = CFrame.new(behindPos, targetRoot.Position)
-    
-    -- 2. Switch to Knife (Key 3)
+    -- Keep velocity 0 to prevent flinging
+    localRoot.AssemblyLinearVelocity = Vector3.new(0, 0, 0)
+end
+
+function Combat.performBackstab(targetPlayer)
+    -- Switch to Knife (Key 3)
     pcall(function()
         game:GetService("VirtualInputManager"):SendKeyEvent(true, Enum.KeyCode.Three, false, game)
-        task.wait(0.05)
+        task.wait(0.01)
         game:GetService("VirtualInputManager"):SendKeyEvent(false, Enum.KeyCode.Three, false, game)
     end)
     
-    -- 3. Attack (Right Click - heavy attack)
-    task.wait(0.1)
-    pcall(function()
-        mouse2press()
-        task.wait(0.05)
-        mouse2release()
-    end)
+    -- Continuous attack will be handled in the main loop
 end
 
 return Combat
