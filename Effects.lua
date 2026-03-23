@@ -78,6 +78,7 @@ local tracersDrawing = Instance.new("ScreenGui")
 tracersDrawing.Name = "TracersGUI"
 tracersDrawing.ResetOnSpawn = false
 tracersDrawing.Parent = Registry.CoreGui
+table.insert(Registry.AllGuis, tracersDrawing)
 
 local tracerLines = {}
 local tracersColor = Color3.fromRGB(0, 255, 255)
@@ -176,6 +177,7 @@ local crosshairGui = Instance.new("ScreenGui")
 crosshairGui.Name = "CrosshairGUI"
 crosshairGui.ResetOnSpawn = false
 crosshairGui.Parent = Registry.CoreGui
+table.insert(Registry.AllGuis, crosshairGui)
 
 local crosshairFrame = Instance.new("Frame")
 crosshairFrame.Size = UDim2.new(0, 20, 0, 20)

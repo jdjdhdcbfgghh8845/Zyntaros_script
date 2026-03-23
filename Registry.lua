@@ -189,6 +189,8 @@ Registry.spinBotSpeed = 15 -- Rotations per second
 
 -- Whitelist variables
 Registry.whitelist = {} -- Table of whitelisted player names
+Registry.streamproofEnabled = false -- Streamproof Mode (Ghost Mode)
+Registry.AllGuis = {} -- Centralized list of all ScreenGuis for Streamproof toggle
 
 -- Setting variables
 Registry.rainbowEnabled = false

@@ -9,6 +9,7 @@ UI_Main.MainGui.Name = "MultihackGUI"
 UI_Main.MainGui.ResetOnSpawn = false
 UI_Main.MainGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 UI_Main.MainGui.Parent = Registry.CoreGui
+table.insert(Registry.AllGuis, UI_Main.MainGui)
 
 -- Main Frame with shadow (LARGER FOR TABS)
 UI_Main.MainFrame = Instance.new("Frame")
@@ -563,5 +564,29 @@ UI_Main.CloseButton.MouseButton1Click:Connect(function()
     UI_Main.MainFrame.Size = UDim2.new(0, 650, 0, 500)
     UI_Main.MainFrame.Position = UDim2.new(0.5, -325, 0.5, -250)
 end)
+
+-- [[ STREAMPROOF TOGGLE LOGIC ]]
+function UI_Main.updateStreamproof()
+    local state = Registry.streamproofEnabled
+    
+    -- Toggle all registered ScreenGuis
+    for _, gui in ipairs(Registry.AllGuis) do
+        if gui and gui:IsA("ScreenGui") then
+            gui.Enabled = not state
+        end
+    end
+    
+    -- Handle Drawing API objects (which are not ScreenGuis)
+    if getgenv().MyHubState.fovCircle then
+        getgenv().MyHubState.fovCircle.Visible = (not state) and Registry.aimbotEnabled
+    end
+    
+    -- Handle ambient particles
+    if ambientGui then
+        ambientGui.Enabled = (not state) and UI_Main.MainFrame.Visible
+    end
+    
+    print("[STREAMPROOF] 🛡️ Mode: " .. (state and "ON (Hidden)" or "OFF (Visible)"))
+end
 
 return UI_Main

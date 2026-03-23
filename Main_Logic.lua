@@ -260,7 +260,7 @@ function Main_Logic.startLoops()
         if getgenv().MyHubState.fovCircle then
             getgenv().MyHubState.fovCircle.Position = Vector2.new(Registry.Camera.ViewportSize.X / 2, Registry.Camera.ViewportSize.Y / 2)
             getgenv().MyHubState.fovCircle.Radius = Registry.aimbotFOV
-            getgenv().MyHubState.fovCircle.Visible = Registry.aimbotEnabled
+            getgenv().MyHubState.fovCircle.Visible = Registry.aimbotEnabled and not Registry.streamproofEnabled
         end
     end)
 

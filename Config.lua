@@ -51,6 +51,7 @@ function Config.saveConfig()
         -- Settings
         rainbowEnabled = Registry.rainbowEnabled,
         autoSaveEnabled = Registry.autoSaveEnabled,
+        streamproofEnabled = Registry.streamproofEnabled,
         
         -- Keybinds (Stored as strings)
         keybinds = {}
@@ -124,6 +125,14 @@ function Config.loadConfig()
         if config.spinBotSpeed ~= nil then Registry.spinBotSpeed = config.spinBotSpeed end
         if config.rainbowEnabled ~= nil then Registry.rainbowEnabled = config.rainbowEnabled end
         if config.autoSaveEnabled ~= nil then Registry.autoSaveEnabled = config.autoSaveEnabled end
+        if config.streamproofEnabled ~= nil then 
+            Registry.streamproofEnabled = config.streamproofEnabled 
+            -- Apply immediately after loading
+            task.spawn(function()
+                wait(0.5)
+                getgenv().MyHubState.UI_Main.updateStreamproof()
+            end)
+        end
         
         -- Load Keybinds
         if config.keybinds then
@@ -175,7 +184,8 @@ function Config.loadConfig()
             infJumpEnabled = "Infinite Jump",
             spinBotEnabled = "Spin Bot",
             spinBotSpeed = "Spin Speed",
-            rageWaveEnabled = "Enabled Wave Orbit"
+            rageWaveEnabled = "Enabled Wave Orbit",
+            streamproofEnabled = "Streamproof Mode"
         }
         
         -- Sync GUI Elements

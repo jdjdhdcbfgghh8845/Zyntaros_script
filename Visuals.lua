@@ -172,6 +172,7 @@ function Visuals.createTargetHUD()
     targetHUD.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
     targetHUD.ResetOnSpawn = false
     targetHUD.Parent = Registry.CoreGui
+    table.insert(Registry.AllGuis, targetHUD)
     
     targetHUDFrame = Instance.new("Frame")
     targetHUDFrame.Name = "MainFrame"

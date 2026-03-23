@@ -218,6 +218,11 @@ function UI_Pages.build()
     local configSettings, configIcon = UI_Components.createFeatureTile(SettingsPage, "Configuration", false, function(state) end)
     configIcon.Text = "💾"
     UI_Components.createSection(configSettings, "Profiles")
+    UI_Components.createToggle(configSettings, "Streamproof Mode", false, function(state)
+        Registry.streamproofEnabled = state
+        if Registry.autoSaveEnabled then Config.saveConfig() end
+        UI_Main.updateStreamproof()
+    end)
     UI_Components.createToggle(configSettings, "Auto-Save on Exit", true, function(state) Registry.autoSaveEnabled = state end)
     
     local saveBtn = UI_Components.createToggle(configSettings, "Click to SAVE Config", false, function(s) Config.saveConfig() end)
